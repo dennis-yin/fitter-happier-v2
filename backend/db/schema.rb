@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 2020_08_18_172433) do
 
   create_table "categories", force: :cascade do |t|
     t.string "title"
+    t.string "image_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -24,6 +25,7 @@ ActiveRecord::Schema.define(version: 2020_08_18_172433) do
   create_table "goals", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.text "description"
+    t.boolean "complete"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "category_id", null: false
