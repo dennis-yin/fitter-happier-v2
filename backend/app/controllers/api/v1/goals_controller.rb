@@ -5,7 +5,7 @@ class Api::V1::GoalsController < ApplicationController
   def index
     @goals = Goal.all
 
-    render json: @goals
+    render json: GoalSerializer.new(@goals).serializable_hash.to_json
   end
 
   # GET /goals/1
@@ -37,6 +37,10 @@ class Api::V1::GoalsController < ApplicationController
   def destroy
     @goal.destroy
   end
+
+  # def get_current_streak
+
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
