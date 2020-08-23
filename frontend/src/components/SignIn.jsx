@@ -58,12 +58,10 @@ export default function SignIn({ setSignedIn }) {
       const res = await axios({
         method: 'post',
         url: url,
-        data: {
-          email: credentials.email,
-          password: credentials.password
-        }
+        data: JSON.stringify({ user: { ...credentials } }),
+        headers: { 'Content-Type': 'application/json' }
       });
-      console.log('Status: ', res.status)
+      console.log('Status: ', res.status);
       setSignedIn(true);
     } catch (err) {
       console.log(err.toJSON());
