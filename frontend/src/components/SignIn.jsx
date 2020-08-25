@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 
-const url = 'http://localhost:3001/users/sign_in';
+const url = 'http://localhost:3001/auth/sign_in';
 
 function Copyright() {
   return (
@@ -58,7 +58,8 @@ export default function SignIn({ setSignedIn }) {
       const res = await axios({
         method: 'post',
         url: url,
-        data: JSON.stringify({ user: { ...credentials } }),
+        data: JSON.stringify(credentials),
+        // data: JSON.stringify({ user: { ...credentials } }),
         headers: { 'Content-Type': 'application/json' }
       });
       console.log('Status: ', res.status);
