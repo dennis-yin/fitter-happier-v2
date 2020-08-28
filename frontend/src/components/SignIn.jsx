@@ -49,25 +49,42 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SignIn({ setSignedIn }) {
+export default function SignIn({ setAuthenticated }) {
   const classes = useStyles();
   const [credentials, setCredentials] = useState({ email: '', password: '' });
 
-  async function handleSubmit() {
-    try {
-      const res = await axios({
-        method: 'post',
-        url: url,
-        data: JSON.stringify(credentials),
-        // data: JSON.stringify({ user: { ...credentials } }),
-        headers: { 'Content-Type': 'application/json' }
+  function handleSubmit(e) {
+    e.preventDefault();
+    fetch(url, {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Request succeeded with JSON response', data);
+      })
+      .catch((error) => {
+        console.log('Request failed', error);
       });
-      console.log('Status: ', res.status);
-      setSignedIn(true);
-    } catch (err) {
-      console.log(err.toJSON());
-    }
   }
+
+  // async function handleSubmit() {
+  //   try {
+  //     const res = await axios({
+  //       method: 'post',
+  //       url: url,
+  //       data: JSON.stringify(credentials),
+  //       headers: { 'Content-Type': 'application/json' }
+  //     });
+  //     console.log('Status: ', res.status);
+  //     setAuthenticated(true);
+  //   } catch (err) {
+  //     console.log(err.toJSON());
+  //   }
+  // }
 
   return (
     <Container component="main" maxWidth="xs">
