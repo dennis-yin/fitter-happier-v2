@@ -20,8 +20,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/dennis-yin">
+        Dennis Yin
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -53,38 +53,21 @@ export default function SignIn({ setAuthenticated }) {
   const classes = useStyles();
   const [credentials, setCredentials] = useState({ email: '', password: '' });
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    fetch(url, {
-      method: 'post',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(credentials)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Request succeeded with JSON response', data);
-      })
-      .catch((error) => {
-        console.log('Request failed', error);
+    try {
+      const res = await axios({
+        method: 'post',
+        url: url,
+        data: JSON.stringify(credentials),
+        headers: { 'Content-Type': 'application/json' }
       });
+      localStorage.setItem('token', res.headers['access-token']);
+      setAuthenticated(true);
+    } catch (err) {
+      console.log(err);
+    }
   }
-
-  // async function handleSubmit() {
-  //   try {
-  //     const res = await axios({
-  //       method: 'post',
-  //       url: url,
-  //       data: JSON.stringify(credentials),
-  //       headers: { 'Content-Type': 'application/json' }
-  //     });
-  //     console.log('Status: ', res.status);
-  //     setAuthenticated(true);
-  //   } catch (err) {
-  //     console.log(err.toJSON());
-  //   }
-  // }
 
   return (
     <Container component="main" maxWidth="xs">
