@@ -1,5 +1,6 @@
 class Api::V1::GoalsController < ApplicationController
   before_action :set_goal, only: [:show, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /goals
   def index

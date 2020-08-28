@@ -1,7 +1,9 @@
 user = User.create!({
-  email: "john_doe@email.com",
+  email: "fake@email.com",
   password: "password",
-  password_confirmation: "password"
+  password_confirmation: "password",
+  first_name: "Dennis",
+  last_name: "Yin"
 })
 
 categories = Category.create!([

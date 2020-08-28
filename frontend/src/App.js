@@ -3,12 +3,12 @@ import './App.css';
 import SignIn from './components/SignIn';
 
 function App() {
-  const [signedIn, setSignedIn] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
 
   return (
     <div className="App">
-      {!signedIn && <SignIn setSignedIn={setSignedIn} />}
-      {signedIn && <div>You're signed in</div>}
+      {!authenticated && <SignIn setAuthenticated={setAuthenticated} />}
+      {authenticated && <div>You're signed in</div>}
     </div>
   );
 }

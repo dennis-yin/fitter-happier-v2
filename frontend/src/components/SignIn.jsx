@@ -14,14 +14,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
 
-const url = 'http://localhost:3001/users/sign_in';
+const url = 'http://localhost:3001/auth/sign_in';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/dennis-yin">
+        Dennis Yin
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -49,22 +49,23 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SignIn({ setSignedIn }) {
+export default function SignIn({ setAuthenticated }) {
   const classes = useStyles();
   const [credentials, setCredentials] = useState({ email: '', password: '' });
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
     try {
       const res = await axios({
         method: 'post',
         url: url,
-        data: JSON.stringify({ user: { ...credentials } }),
+        data: JSON.stringify(credentials),
         headers: { 'Content-Type': 'application/json' }
       });
-      console.log('Status: ', res.status);
-      setSignedIn(true);
+      localStorage.setItem('token', res.headers['access-token']);
+      setAuthenticated(true);
     } catch (err) {
-      console.log(err.toJSON());
+      console.log(err);
     }
   }
 
