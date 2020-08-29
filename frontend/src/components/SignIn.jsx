@@ -63,6 +63,8 @@ export default function SignIn({ setAuthenticated }) {
         headers: { 'Content-Type': 'application/json' }
       });
       localStorage.setItem('token', res.headers['access-token']);
+      localStorage.setItem('client', res.headers['client']);
+      localStorage.setItem('uid', res.headers['uid']);
       setAuthenticated(true);
     } catch (err) {
       console.log(err);
