@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn({ setAuthenticated }) {
   const classes = useStyles();
   const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const history = useHistory();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -67,6 +68,7 @@ export default function SignIn({ setAuthenticated }) {
       localStorage.setItem('client', res.headers['client']);
       localStorage.setItem('uid', res.headers['uid']);
       setAuthenticated(true);
+      history.push('/login');
     } catch (err) {
       console.log(err);
     }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import AuthContext from './AuthContext';
+import AuthRoute from './components/AuthRoute';
 import SignIn from './components/SignIn';
 import Home from './components/Home';
 
@@ -10,13 +11,13 @@ function App() {
 
   return (
     <AuthContext.Provider value={authenticated}>
-      <Router>
+      <Router >
         <Switch>
           <Route
-            path="/"
+            path="/login"
             render={() => <SignIn setAuthenticated={setAuthenticated} />}
           />
-          <Route path="/home" component={Home} />
+          <AuthRoute path="/" component={Home} />
         </Switch>
       </Router>
     </AuthContext.Provider>
