@@ -1,26 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import AuthContext from './AuthContext';
-import AuthRoute from './components/AuthRoute';
-import SignIn from './components/SignIn';
-import Home from './components/Home';
+import { useAuth } from './auth-context';
+import AuthenticatedApp from './components/AuthenticatedApp';
+import UnauthenticatedApp from './components/UnauthenticatedApp';
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(false);
+  const { user } = useAuth();
 
   return (
-    <AuthContext.Provider value={authenticated}>
-      <Router >
-        <Switch>
-          <Route
-            path="/login"
-            render={() => <SignIn setAuthenticated={setAuthenticated} />}
-          />
-          <AuthRoute path="/" component={Home} />
-        </Switch>
-      </Router>
-    </AuthContext.Provider>
+    <>
+      {user ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+    </>
   );
 }
 

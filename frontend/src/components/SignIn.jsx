@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,7 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import axios from 'axios';
+import { useAuth } from '../auth-context';
 
 const url = 'http://localhost:3001/auth/sign_in';
 
@@ -50,29 +49,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SignIn({ setAuthenticated }) {
+export default function SignIn() {
   const classes = useStyles();
   const [credentials, setCredentials] = useState({ email: '', password: '' });
-  const history = useHistory();
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-      const res = await axios({
-        method: 'post',
-        url: url,
-        data: JSON.stringify(credentials),
-        headers: { 'Content-Type': 'application/json' }
-      });
-      localStorage.setItem('token', res.headers['access-token']);
-      localStorage.setItem('client', res.headers['client']);
-      localStorage.setItem('uid', res.headers['uid']);
-      setAuthenticated(true);
-      history.push('/login');
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  const { login } = useAuth();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -84,7 +64,14 @@ export default function SignIn({ setAuthenticated }) {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit} noValidate>
+        <form
+          className={classes.form}
+          onSubmit={(e) => {
+            e.preventDefault();
+            login(credentials.email, credentials.password);
+          }}
+          noValidate
+        >
           <TextField
             variant="outlined"
             margin="normal"
