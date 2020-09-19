@@ -4,7 +4,8 @@ import axios from 'axios';
 import { FullPageSpinner } from './components/FullPageSpinner';
 
 const AuthContext = React.createContext();
-const url = 'http://localhost:3001/auth/sign_in';
+const signInUrl = 'http://localhost:3001/auth/sign_in';
+const registerUrl = 'http://localhost:3001/auth/sign_up';
 
 function AuthProvider(props) {
   const [user, setUser] = useState();
@@ -26,11 +27,11 @@ function AuthProvider(props) {
     try {
       const res = await axios({
         method: 'post',
-        url: url,
+        url: signInUrl,
         data: JSON.stringify({ email, password }),
         headers: { 'Content-Type': 'application/json' }
       });
-      localStorage.setItem('token', res.headers['access-token']);
+      localStorage.setItem('access-token', res.headers['access-token']);
       localStorage.setItem('client', res.headers['client']);
       localStorage.setItem('uid', res.headers['uid']);
       setUser(res.headers['access-token']);
@@ -59,9 +60,3 @@ function AuthProvider(props) {
 const useAuth = () => React.useContext(AuthContext);
 
 export { AuthProvider, useAuth };
-// the UserProvider in user-context.js is basically:
-// const UserProvider = props => (
-//   <UserContext.Provider value={useAuth().data.user} {...props} />
-// )
-// and the useUser hook is basically this:
-// const useUser = () => React.useContext(UserContext)

@@ -14,8 +14,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useAuth } from '../auth-context';
 
-const url = 'http://localhost:3001/auth/sign_in';
-
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -51,7 +49,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
-  const [credentials, setCredentials] = useState({ email: '', password: '' });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { login } = useAuth();
 
   return (
@@ -68,7 +67,7 @@ export default function SignIn() {
           className={classes.form}
           onSubmit={(e) => {
             e.preventDefault();
-            login(credentials.email, credentials.password);
+            login(email, password);
           }}
           noValidate
         >
@@ -81,10 +80,8 @@ export default function SignIn() {
             label="Email Address"
             name="email"
             autoComplete="email"
-            value={credentials.email}
-            onChange={(e) =>
-              setCredentials({ ...credentials, email: e.target.value })
-            }
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             autoFocus
           />
           <TextField
@@ -97,10 +94,8 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={credentials.password}
-            onChange={(e) =>
-              setCredentials({ ...credentials, password: e.target.value })
-            }
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -122,7 +117,7 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/sign_up" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
