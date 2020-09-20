@@ -5,7 +5,7 @@ import { FullPageSpinner } from './components/FullPageSpinner';
 
 const AuthContext = React.createContext();
 const signInUrl = 'http://localhost:3001/auth/sign_in';
-const registerUrl = 'http://localhost:3001/auth/sign_up';
+const registerUrl = 'http://localhost:3001/auth';
 
 function AuthProvider(props) {
   const [user, setUser] = useState();
@@ -47,10 +47,16 @@ function AuthProvider(props) {
       const res = await axios({
         method: 'post',
         url: registerUrl,
-        data: JSON.stringify({ email, password, firstName, lastName }),
+        data: JSON.stringify({
+          email,
+          password,
+          'first_name': firstName,
+          'last_name': lastName
+        }),
         headers: { 'Content-Type': 'application/json' }
       });
-      console.log('Successfully registered')
+      setUser(res.headers['access-token']);
+      console.log('Successfully registered');
     } catch (err) {
       console.log(err);
     }
