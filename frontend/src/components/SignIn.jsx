@@ -65,11 +65,11 @@ export default function SignIn() {
         </Typography>
         <form
           className={classes.form}
+          noValidate
           onSubmit={(e) => {
             e.preventDefault();
             login(email, password);
           }}
-          noValidate
         >
           <TextField
             variant="outlined"
@@ -80,9 +80,9 @@ export default function SignIn() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            autoFocus
           />
           <TextField
             variant="outlined"

@@ -42,7 +42,19 @@ function AuthProvider(props) {
     }
   }
 
-  async function register(email, password) {}
+  async function register(email, password, firstName, lastName) {
+    try {
+      const res = await axios({
+        method: 'post',
+        url: registerUrl,
+        data: JSON.stringify({ email, password, firstName, lastName }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      console.log('Successfully registered')
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async function logout() {
     ['token', 'client', 'uid'].forEach((item) => localStorage.removeItem(item));

@@ -4,7 +4,7 @@ class Api::V1::GoalsController < ApplicationController
 
   # GET /goals
   def index
-    @goals = Goal.all
+    @goals = Goal.where(user_id: current_user.id)
 
     render json: GoalSerializer.new(@goals).serializable_hash.to_json
   end

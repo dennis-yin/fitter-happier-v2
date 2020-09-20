@@ -49,11 +49,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const { register } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const { register } = useAuth();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -69,7 +69,7 @@ export default function SignUp() {
           className={classes.form}
           onSubmit={(e) => {
             e.preventDefault();
-            register(email, password);
+            register(email, password, firstName, lastName);
           }}
           noValidate
         >
@@ -84,6 +84,8 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -95,6 +97,8 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -106,6 +110,8 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -118,6 +124,8 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
