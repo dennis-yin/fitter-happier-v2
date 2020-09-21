@@ -17,16 +17,19 @@ export default function AuthenticatedApp() {
       const fetchGoals = axios({
         method: 'get',
         url: goalsUrl,
-        headers: headers
+        headers
       });
 
       const fetchCategories = axios({
         method: 'get',
         url: categoriesUrl,
-        headers: headers
-      })
-      
-      const [goalRes, categoryRes] = await Promise.all([fetchGoals, fetchCategories])
+        headers
+      });
+
+      const [goalRes, categoryRes] = await Promise.all([
+        fetchGoals,
+        fetchCategories
+      ]);
       setGoals(goalRes.data.data);
       setCategories(categoryRes.data.data);
     }
@@ -35,9 +38,16 @@ export default function AuthenticatedApp() {
 
   return (
     <div className="main-container">
-      {/* {categories.map((category) => (
-        <p>{category.attributes.title}</p>
-      ))} */}
+      <div className="categories-container">
+        {categories.map((category) => (
+          <p>{category.attributes.title}</p>
+        ))}
+      </div>
+      <div className="goals-container">
+        {goals.map((goal) => (
+          <p>{`${goal.attributes.user_id} - ${goal.attributes.description}`}</p>
+        ))}
+      </div>
     </div>
   );
 }

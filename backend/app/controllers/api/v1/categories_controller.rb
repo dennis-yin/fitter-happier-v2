@@ -4,9 +4,16 @@ class Api::V1::CategoriesController < ApplicationController
 
   # GET /categories
   def index
-    @categories = Category.all
+    category_ids = []
+    goals = Goal.where(user_id: current_user.id)
 
-    render json: CategorySerializer.new(@categories).serializable_hash.to_json
+    goals.each do |goal|
+      category_ids.push(goal.category_id) unless category_ids.include? goal.category_id
+    end
+
+    categories = Category.where(id: category_ids)
+    
+    render json: CategorySerializer.new(categories).serializable_hash.to_json
   end
 
   # GET /categories/1
@@ -40,13 +47,14 @@ class Api::V1::CategoriesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_category
-      @category = Category.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def category_params
-      params.require(:category).permit(:title)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_category
+    @category = Category.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def category_params
+    params.require(:category).permit(:title)
+  end
 end
