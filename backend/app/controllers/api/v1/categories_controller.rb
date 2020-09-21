@@ -11,8 +11,8 @@ class Api::V1::CategoriesController < ApplicationController
       category_ids.push(goal.category_id) unless category_ids.include? goal.category_id
     end
 
-    categories = Category.where(id: category_ids)
-    
+    categories = Category.where(id: category_ids).order(:title)
+
     render json: CategorySerializer.new(categories).serializable_hash.to_json
   end
 

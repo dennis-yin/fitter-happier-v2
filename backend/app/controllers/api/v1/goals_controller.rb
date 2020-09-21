@@ -17,11 +17,15 @@ class Api::V1::GoalsController < ApplicationController
   # POST /goals
   def create
     @goal = Goal.new(goal_params)
+    @goal.user_id = current_user.id
+    @goal.complete = false
+    @goal.category_id = 1
 
     if @goal.save
-      render json: @goal, status: :created, location: @goal
+      head :created
     else
-      render json: @goal.errors, status: :unprocessable_entity
+      puts @goal.errors
+      head :unprocessable_entity
     end
   end
 
@@ -44,13 +48,11 @@ class Api::V1::GoalsController < ApplicationController
   # end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_goal
       @goal = Goal.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
     def goal_params
-      params.require(:goal).permit(:User_id, :description)
+      params.require(:goal).permit(:description)
     end
 end

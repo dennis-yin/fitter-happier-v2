@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import GoalsList from './GoalsList';
+
+const goalsUrl = 'http://localhost:3001/api/v1/goals';
+const categoriesUrl = 'http://localhost:3001/api/v1/categories';
 
 export default function AuthenticatedApp() {
-  const goalsUrl = 'http://localhost:3001/api/v1/goals';
-  const categoriesUrl = 'http://localhost:3001/api/v1/categories';
   const [goals, setGoals] = useState([]);
   const [categories, setCategories] = useState([]);
   const headers = {
@@ -44,9 +46,7 @@ export default function AuthenticatedApp() {
         ))}
       </div>
       <div className="goals-container">
-        {goals.map((goal) => (
-          <p>{`${goal.attributes.user_id} - ${goal.attributes.description}`}</p>
-        ))}
+        <GoalsList goals={goals} headers={headers} />
       </div>
     </div>
   );
