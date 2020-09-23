@@ -8,7 +8,8 @@ const signInUrl = 'http://localhost:3001/auth/sign_in';
 const registerUrl = 'http://localhost:3001/auth';
 
 function AuthProvider(props) {
-  const [user, setUser] = useState();
+  const userExists = localStorage.getItem('uid');
+  const [user, setUser] = useState(userExists);
   const history = useHistory();
 
   // code for pre-loading the user's information if we have their token in
@@ -63,7 +64,7 @@ function AuthProvider(props) {
   }
 
   async function logout() {
-    ['token', 'client', 'uid'].forEach((item) => localStorage.removeItem(item));
+    localStorage.clear();
     setUser(null);
   }
 
