@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import CategoriesList from './CategoriesList';
 import GoalsList from './GoalsList';
 
 const goalsUrl = 'http://localhost:3001/api/v1/goals';
@@ -41,9 +42,7 @@ export default function AuthenticatedApp() {
   return (
     <div className="main-container">
       <div className="categories-container">
-        {categories.map((category) => (
-          <p>{category.attributes.title}</p>
-        ))}
+        <CategoriesList categories={categories} headers={headers} />
       </div>
       <div className="goals-container">
         <GoalsList goals={goals} headers={headers} />
