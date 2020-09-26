@@ -48,11 +48,12 @@ class Api::V1::GoalsController < ApplicationController
   # end
 
   private
-    def set_goal
-      @goal = Goal.find(params[:id])
-    end
+  
+  def set_goal
+    @goal = Goal.find(params[:id])
+  end
 
-    def goal_params
-      params.require(:goal).permit(:description)
-    end
+  def goal_params
+    params.require(:goal).permit(:description)
+  end
 end

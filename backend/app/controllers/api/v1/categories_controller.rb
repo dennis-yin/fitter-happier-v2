@@ -26,9 +26,10 @@ class Api::V1::CategoriesController < ApplicationController
     @category = Category.new(category_params)
 
     if @category.save
-      render json: @category, status: :created, location: @category
+      head :created
     else
-      render json: @category.errors, status: :unprocessable_entity
+      puts @category.errors
+      head :unprocessable_entity
     end
   end
 
@@ -48,12 +49,10 @@ class Api::V1::CategoriesController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_category
     @category = Category.find(params[:id])
   end
 
-  # Only allow a trusted parameter "white list" through.
   def category_params
     params.require(:category).permit(:title)
   end

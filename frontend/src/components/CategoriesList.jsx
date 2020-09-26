@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import axios from 'axios';
 
@@ -12,30 +12,31 @@ function createOption(label) {
 }
 
 function CategoriesList({ categories, headers }) {
-  const defaultOptions = categories.map((category) =>
-    createOption(category.attributes.title)
-  );
-
-  console.log(defaultOptions)
-
-  const [categoryOptions, setCategoryOptions] = useState(defaultOptions);
-  const [value, setValue] = useState('');
+  const [options, setOptions] = useState();
+  const [newCategoryTitle, setNewCategoryTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleChange(newValue) {
-    setValue(newValue);
+  useEffect(() => {
+    setOptions(
+      categories.map((category) => createOption(category.attributes.title))
+    );
+  }, [categories]);
+
+  function handleInputChange(inputValue, actionMeta) {
+    setNewCategoryTitle(inputValue);
   }
 
-  async function handleCreate(inputValue) {
+  async function handleCreate() {
     setIsLoading(true);
     try {
       const res = await axios({
         method: 'post',
+        url,
         headers,
-        url
+        data: { category: { title: newCategoryTitle } }
       });
-      const newCategory = createOption(inputValue);
-      setCategoryOptions(...categoryOptions, newCategory)
+      const newOption = createOption(newCategoryTitle);
+      setOptions([...options, newOption]);
       setIsLoading(false);
     } catch (err) {
       console.log(err);
@@ -45,12 +46,11 @@ function CategoriesList({ categories, headers }) {
 
   return (
     <CreatableSelect
-      isClearable
       isDisabled={isLoading}
-      onChange={handleChange}
+      isLoading={isLoading}
+      onInputChange={handleInputChange}
       onCreateOption={handleCreate}
-      options={categoryOptions}
-      value={value}
+      options={options}
     />
   );
 }
