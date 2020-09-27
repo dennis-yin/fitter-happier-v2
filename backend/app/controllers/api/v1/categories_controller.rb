@@ -25,13 +25,17 @@ class Api::V1::CategoriesController < ApplicationController
 
   # POST /categories
   def create
-    @category = Category.new(category_params)
-
-    if @category.save
-      head :created
+    if Category.exists?(title: params[:category][:title])
+      head :ok
     else
-      puts @category.errors
-      head :unprocessable_entity
+      @category = Category.new(category_params)
+
+      if @category.save
+        head :created
+      else
+        puts @category.errors
+        head :unprocessable_entity
+      end
     end
   end
 
