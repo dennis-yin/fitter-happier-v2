@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const url = 'http://localhost:3001/api/v1/goals';
 
-export default function GoalsList({ goals, currentCategoryTitle, headers }) {
+export default function GoalsList({ goals, setGoals, currentCategory, headers }) {
   const [description, setDescription] = useState('');
 
   async function createGoal() {
@@ -13,8 +13,24 @@ export default function GoalsList({ goals, currentCategoryTitle, headers }) {
         method: 'post',
         url,
         headers,
-        data: { goal: { description, category_title: currentCategoryTitle } }
+        data: {
+          goal: {
+            description,
+            category_id: currentCategory.id
+          }
+        }
       });
+
+      try {
+        const res = await axios({
+          method: 'get',
+          url: url,
+          headers
+        });
+        setGoals(res.data.data)
+      } catch (error) {
+        console.log(error);
+      }
       console.log('Created goal');
       setDescription('');
     } catch (err) {
@@ -37,7 +53,7 @@ export default function GoalsList({ goals, currentCategoryTitle, headers }) {
         />
       </form>
       {goals.map((goal) => (
-        <p>{`${goal.attributes.user_id} - ${goal.attributes.description}`}</p>
+        <p key={goal.id}>{`${goal.attributes.user_id} - ${goal.attributes.description}`}</p>
       ))}
     </>
   );

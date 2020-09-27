@@ -16,13 +16,11 @@ class Api::V1::GoalsController < ApplicationController
 
   # POST /goals
   def create
-    category = Category.find_by(title: params[:goal][:category_title])
-
     @goal = Goal.new(
       user_id: current_user.id,
       description: params[:goal][:description],
       complete: false,
-      category_id: category.id
+      category_id: params[:goal][:category_id]
     )
 
     if @goal.save
@@ -58,6 +56,6 @@ class Api::V1::GoalsController < ApplicationController
   end
 
   def goal_params
-    params.require(:goal).permit(:description, :category_title)
+    params.require(:goal).permit(:description, :category_id)
   end
 end

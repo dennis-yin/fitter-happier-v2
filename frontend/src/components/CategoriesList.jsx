@@ -11,7 +11,7 @@ function createOption(label) {
   };
 }
 
-function CategoriesList({ categories, setCurrentCategoryTitle, headers }) {
+function CategoriesList({ categories, setCurrentCategory, headers }) {
   const [options, setOptions] = useState();
   const [newCategoryTitle, setNewCategoryTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,10 @@ function CategoriesList({ categories, setCurrentCategoryTitle, headers }) {
 
   function handleChange(newValue, actionMeta) {
     if (actionMeta.action === 'select-option') {
-      setCurrentCategoryTitle(newValue.label);
+      const category = categories.filter(
+        (category) => category.attributes.title === newValue.label
+      )[0];
+      setCurrentCategory(category);
     }
   }
 
@@ -59,6 +62,7 @@ function CategoriesList({ categories, setCurrentCategoryTitle, headers }) {
       onInputChange={handleInputChange}
       onCreateOption={handleCreate}
       options={options}
+      defaultValue={createOption(categories[0].attributes.title)}
     />
   );
 }
