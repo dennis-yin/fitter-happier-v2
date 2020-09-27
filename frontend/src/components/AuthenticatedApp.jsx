@@ -17,6 +17,7 @@ export default function AuthenticatedApp() {
   const classes = useStyles();
   const [goals, setGoals] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [currentCategoryTitle, setCurrentCategoryTitle] = useState();
   const headers = {
     'access-token': localStorage.getItem('access-token'),
     client: localStorage.getItem('client'),
@@ -50,10 +51,18 @@ export default function AuthenticatedApp() {
   return (
     <div className="main-container">
       <div className={classes.categoryContainer}>
-        <CategoriesList categories={categories} headers={headers} />
+        <CategoriesList
+          categories={categories}
+          headers={headers}
+          setCurrentCategoryTitle={setCurrentCategoryTitle}
+        />
       </div>
       <div className="goals-container">
-        <GoalsList goals={goals} headers={headers} />
+        <GoalsList
+          goals={goals}
+          headers={headers}
+          currentCategoryTitle={currentCategoryTitle}
+        />
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ function createOption(label) {
   };
 }
 
-function CategoriesList({ categories, headers }) {
+function CategoriesList({ categories, setCurrentCategoryTitle, headers }) {
   const [options, setOptions] = useState();
   const [newCategoryTitle, setNewCategoryTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,8 +22,14 @@ function CategoriesList({ categories, headers }) {
     );
   }, [categories]);
 
-  function handleInputChange(inputValue, actionMeta) {
+  function handleInputChange(inputValue) {
     setNewCategoryTitle(inputValue);
+  }
+
+  function handleChange(newValue, actionMeta) {
+    if (actionMeta.action === 'select-option') {
+      setCurrentCategoryTitle(newValue.label);
+    }
   }
 
   async function handleCreate() {
@@ -37,6 +43,7 @@ function CategoriesList({ categories, headers }) {
       });
       const newOption = createOption(newCategoryTitle);
       setOptions([...options, newOption]);
+      categories = [...categories, newCategoryTitle];
       setIsLoading(false);
     } catch (err) {
       console.log(err);
@@ -48,6 +55,7 @@ function CategoriesList({ categories, headers }) {
     <CreatableSelect
       isDisabled={isLoading}
       isLoading={isLoading}
+      onChange={handleChange}
       onInputChange={handleInputChange}
       onCreateOption={handleCreate}
       options={options}

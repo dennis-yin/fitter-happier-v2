@@ -8,7 +8,9 @@ class Api::V1::CategoriesController < ApplicationController
     goals = Goal.where(user_id: current_user.id)
 
     goals.each do |goal|
-      category_ids.push(goal.category_id) unless category_ids.include? goal.category_id
+      unless category_ids.include? goal.category_id
+        category_ids.push(goal.category_id)
+      end
     end
 
     categories = Category.where(id: category_ids).order(:title)

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const url = 'http://localhost:3001/api/v1/goals';
 
-export default function GoalsList({ goals, headers }) {
+export default function GoalsList({ goals, currentCategoryTitle, headers }) {
   const [description, setDescription] = useState('');
 
   async function createGoal() {
@@ -13,7 +13,7 @@ export default function GoalsList({ goals, headers }) {
         method: 'post',
         url,
         headers,
-        data: { goal: { description } }
+        data: { goal: { description, category_title: currentCategoryTitle } }
       });
       console.log('Created goal');
       setDescription('');
