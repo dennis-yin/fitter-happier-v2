@@ -15,11 +15,13 @@ const useStyles = makeStyles(() => ({
 
 export default function AuthenticatedApp() {
   const classes = useStyles();
+  
   const [isLoading, setIsLoading] = useState(true);
   const [goals, setGoals] = useState([]);
   const [filteredGoals, setFilteredGoals] = useState([]);
   const [categories, setCategories] = useState([]);
   const [currentCategory, setCurrentCategory] = useState();
+  
   const headers = {
     'access-token': localStorage.getItem('access-token'),
     client: localStorage.getItem('client'),
@@ -79,8 +81,9 @@ export default function AuthenticatedApp() {
           </div>
           <div className="goals-container">
             <GoalsList
-              goals={filteredGoals}
-              setGoals={setGoals}
+              allGoals={goals}
+              setAllGoals={setGoals}
+              filteredGoals={filteredGoals}
               headers={headers}
               currentCategory={currentCategory}
             />

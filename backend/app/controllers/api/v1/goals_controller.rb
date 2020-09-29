@@ -34,9 +34,10 @@ class Api::V1::GoalsController < ApplicationController
   # PATCH/PUT /goals/1
   def update
     if @goal.update(goal_params)
-      render json: @goal
+      head :ok
     else
-      render json: @goal.errors, status: :unprocessable_entity
+      puts @goal.errors
+      head :unprocessable_entity
     end
   end
 
@@ -56,6 +57,6 @@ class Api::V1::GoalsController < ApplicationController
   end
 
   def goal_params
-    params.require(:goal).permit(:description, :category_id)
+    params.require(:goal).permit(:description, :category_id, :complete)
   end
 end
