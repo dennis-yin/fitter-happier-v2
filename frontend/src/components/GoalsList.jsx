@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
+import CompletionRate from './CompletionRate';
 
 const url = 'http://localhost:3001/api/v1/goals';
 
@@ -111,6 +112,7 @@ export default function GoalsList({
           onChange={(e) => setDescription(e.target.value)}
         />
       </form>
+      <CompletionRate completedGoals={checked} goals={filteredGoals} />
       <List>
         {filteredGoals.map((goal) => {
           const labelId = `checkbox-list-label-${goal.id}`;
