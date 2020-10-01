@@ -6,10 +6,17 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
+import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
 import CompletionRate from './CompletionRate';
 
 const url = 'http://localhost:3001/api/v1/goals';
+
+const useStyles = makeStyles(() => ({
+  listItem: {
+    width: '25em'
+  }
+}));
 
 export default function GoalsList({
   allGoals,
@@ -18,6 +25,8 @@ export default function GoalsList({
   headers,
   currentCategory
 }) {
+  const classes = useStyles();
+
   const [description, setDescription] = useState('');
   const [checked, setChecked] = useState([]);
 
@@ -98,6 +107,38 @@ export default function GoalsList({
     setChecked(newChecked);
   }
 
+  async function deleteGoal(id) {
+    if (checked.includes(id)) {
+      const index = checked.indexOf(id);
+      const updatedChecked = [...checked];
+      updatedChecked.splice(index, 1);
+      setChecked(updatedChecked);
+    }
+
+    try {
+      const res = await axios({
+        method: 'delete',
+        url: `${url}/${id}`,
+        headers
+      });
+
+      try {
+        const res = await axios({
+          method: 'get',
+          url: url,
+          headers
+        });
+        setAllGoals(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log('Goal deleted');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
       <form
@@ -118,7 +159,7 @@ export default function GoalsList({
           const labelId = `checkbox-list-label-${goal.id}`;
 
           return (
-            <ListItem key={goal.id} dense onClick={() => handleToggle(goal.id)}>
+            <ListItem key={goal.id} className={classes.listItem} dense>
               <ListItemIcon>
                 <Checkbox
                   edge="start"
@@ -126,12 +167,14 @@ export default function GoalsList({
                   tabIndex={-1}
                   disableRipple
                   inputProps={{ 'aria-labelledby': labelId }}
+                  onClick={() => handleToggle(goal.id)}
                 />
               </ListItemIcon>
               <ListItemText
                 id={labelId}
                 primary={goal.attributes.description}
               />
+              <CloseIcon onClick={() => deleteGoal(goal.id)} />
             </ListItem>
           );
         })}

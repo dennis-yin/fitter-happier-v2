@@ -13,7 +13,7 @@ function CompletionRate({ completedGoals, goals }) {
     );
   }, [completedGoals, goals]);
 
-  return <div className="completion-rate">{completionRate}%</div>;
+  return <div className="completion-rate">{completionRate == 100 ? '🔥 100' : `${completionRate}`}%</div>;
 }
 
 export default CompletionRate;
