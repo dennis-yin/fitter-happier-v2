@@ -35,5 +35,9 @@ module Backend
     config.api_only = true
 
     config.autoload_paths << Rails.root.join('lib')
+
+    # Use PST for Rails and ActiveRecord
+    config.time_zone = 'Pacific Time (US & Canada)'
+    config.active_record.default_timezone = :local
   end
 end

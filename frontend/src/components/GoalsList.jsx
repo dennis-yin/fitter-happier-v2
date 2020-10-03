@@ -96,7 +96,9 @@ export default function GoalsList({
 
       const updatedGoals = [...allGoals];
       updatedGoals.forEach((goal, index, array) => {
-        if (goal.id === value) array[index].attributes.complete = goalComplete;
+        if (goal.id === value) { 
+          array[index].attributes.complete = goalComplete;
+        }
       });
       setAllGoals(updatedGoals);
       console.log('Goal updated');

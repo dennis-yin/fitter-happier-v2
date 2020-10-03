@@ -2,19 +2,11 @@ class Api::V1::GoalsController < ApplicationController
   before_action :set_goal, only: [:show, :update, :destroy]
   before_action :authenticate_user!
 
-  # GET /goals
   def index
-    @goals = Goal.where(user_id: current_user.id)
-
+    @goals = Goal.goals_for_today(current_user.id)
     render json: GoalSerializer.new(@goals).serializable_hash.to_json
   end
 
-  # GET /goals/1
-  def show
-    render json: @goal
-  end
-
-  # POST /goals
   def create
     @goal = Goal.new(
       user_id: current_user.id,
@@ -31,7 +23,6 @@ class Api::V1::GoalsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /goals/1
   def update
     if @goal.update(goal_params)
       head :ok
@@ -41,14 +32,9 @@ class Api::V1::GoalsController < ApplicationController
     end
   end
 
-  # DELETE /goals/1
   def destroy
     @goal.destroy
   end
-
-  # def get_current_streak
-
-  # end
 
   private
 
