@@ -22,6 +22,7 @@ export default function GoalsList({
   allGoals,
   setAllGoals,
   filteredGoals,
+  setFilteredGoals,
   headers,
   currentCategory
 }) {
@@ -42,11 +43,11 @@ export default function GoalsList({
 
   useEffect(() => {
     setChecked(checkCompleteStatus(filteredGoals));
-  }, [...filteredGoals]);
+  }, [filteredGoals]);
 
   async function createGoal() {
     try {
-      await axios({
+      const res = await axios({
         method: 'post',
         url,
         headers,
@@ -58,55 +59,45 @@ export default function GoalsList({
         }
       });
 
-      try {
-        const res = await axios({
-          method: 'get',
-          url: url,
-          headers
-        });
-        setAllGoals(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
+      setAllGoals([...allGoals, res.data.data]);
+      setFilteredGoals([...filteredGoals, res.data.data]);
       console.log('Created goal');
-      setDescription('');
     } catch (err) {
       console.log(err);
     }
   }
 
-  async function handleToggle(value) {
-    const currentIndex = checked.indexOf(value);
+  async function handleToggle(goalId) {
+    const currentIndex = checked.indexOf(goalId);
     const newChecked = [...checked];
     const goalComplete = currentIndex ? true : false;
 
     if (currentIndex === -1) {
-      newChecked.push(value);
+      newChecked.push(goalId);
     } else {
       newChecked.splice(currentIndex, 1);
     }
 
     try {
-      const res = await axios({
+      await axios({
         method: 'patch',
-        url: `${url}/${value}`,
+        url: `${url}/${goalId}`,
         headers,
         data: { goal: { complete: goalComplete } }
       });
 
       const updatedGoals = [...allGoals];
       updatedGoals.forEach((goal, index, array) => {
-        if (goal.id === value) { 
+        if (goal.id === goalId) {
           array[index].attributes.complete = goalComplete;
         }
       });
       setAllGoals(updatedGoals);
+      setChecked(newChecked);
       console.log('Goal updated');
     } catch (error) {
       console.log(error);
     }
-
-    setChecked(newChecked);
   }
 
   async function deleteGoal(id) {
@@ -117,24 +108,18 @@ export default function GoalsList({
       setChecked(updatedChecked);
     }
 
+    const updatedFilteredGoals = filteredGoals.filter((goal) => goal.id !== id);
+    setFilteredGoals(updatedFilteredGoals);
+
+    const updatedGoals = allGoals.filter((goal) => goal.id !== id);
+    setAllGoals(updatedGoals);
+
     try {
-      const res = await axios({
+      await axios({
         method: 'delete',
         url: `${url}/${id}`,
         headers
       });
-
-      try {
-        const res = await axios({
-          method: 'get',
-          url: url,
-          headers
-        });
-        setAllGoals(res.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-
       console.log('Goal deleted');
     } catch (error) {
       console.log(error);

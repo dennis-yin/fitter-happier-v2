@@ -28,7 +28,7 @@ export default function AuthenticatedApp() {
     uid: localStorage.getItem('uid')
   };
 
-  function filterGoals(goals) {
+  function filterByCategory(goals) {
     return goals.filter(
       (goal) => goal.attributes.category_id === Number(currentCategory.id)
     );
@@ -63,8 +63,8 @@ export default function AuthenticatedApp() {
   }, []);
 
   useEffect(() => {
-    setFilteredGoals(filterGoals(goals));
-  }, [currentCategory, ...goals]);
+    setFilteredGoals(filterByCategory(goals));
+  }, [currentCategory]);
 
   return (
     <>
@@ -84,6 +84,7 @@ export default function AuthenticatedApp() {
               allGoals={goals}
               setAllGoals={setGoals}
               filteredGoals={filteredGoals}
+              setFilteredGoals={setFilteredGoals}
               headers={headers}
               currentCategory={currentCategory}
             />

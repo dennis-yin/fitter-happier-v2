@@ -16,7 +16,7 @@ class Api::V1::GoalsController < ApplicationController
     )
 
     if @goal.save
-      head :created
+      render json: GoalSerializer.new(@goal).serializable_hash.to_json
     else
       puts @goal.errors
       head :unprocessable_entity
