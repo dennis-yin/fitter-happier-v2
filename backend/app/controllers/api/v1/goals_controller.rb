@@ -3,7 +3,13 @@ class Api::V1::GoalsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @goals = Goal.goals_for_today(current_user.id)
+    if params[:date]
+      date = Date.parse(params[:date])
+      @goals = Goal.filter_by_date(current_user.id, date)
+    else
+      @goals = Goal.all
+    end
+
     render json: GoalSerializer.new(@goals).serializable_hash.to_json
   end
 
@@ -43,6 +49,6 @@ class Api::V1::GoalsController < ApplicationController
   end
 
   def goal_params
-    params.require(:goal).permit(:description, :category_id, :complete)
+    params.require(:goal).permit(:description, :category_id, :complete, :date)
   end
 end

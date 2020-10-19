@@ -47,4 +47,4 @@ gem 'devise_token_auth'
 gem 'jsonapi-serializer'
 
 # Better looking console output
-gem 'pry'
+gem 'pry-rails'
