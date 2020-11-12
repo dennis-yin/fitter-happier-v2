@@ -3,25 +3,49 @@ import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import CategoriesList from './CategoriesList';
 import GoalsList from './GoalsList';
+import DayPicker from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
 
 const goalsUrl = 'http://localhost:3001/api/v1/goals';
 const categoriesUrl = 'http://localhost:3001/api/v1/categories';
 
 const useStyles = makeStyles(() => ({
+  mainContainer: {
+    height: '90vh',
+    display: 'grid',
+    gridTemplateColumns: '15% 25% 45% 15%',
+    gridTemplateRows: '20% 10% 60% 10%',
+    columnGap: '10px',
+    rowGap: '10px',
+    justifyItems: 'center',
+    alignItems: 'center'
+  },
   categoryContainer: {
-    width: '20em'
+    gridColumn: '2 / 3',
+    gridRow: '2 / 3',
+    justifySelf: 'stretch'
+  },
+  goalsContainer: {
+    gridColumn: '3 / 4',
+    gridRow: '2 / 4'
+  },
+  calendar: {
+    gridColumn: '2 / 3',
+    gridRow: '3 / 4',
+    alignSelf: 'start'
   }
 }));
 
 export default function AuthenticatedApp() {
   const classes = useStyles();
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [goals, setGoals] = useState([]);
   const [filteredGoals, setFilteredGoals] = useState([]);
   const [categories, setCategories] = useState([]);
   const [currentCategory, setCurrentCategory] = useState();
-  
+  const [selectedDay, setSelectedDay] = useState(new Date());
+
   const headers = {
     'access-token': localStorage.getItem('access-token'),
     client: localStorage.getItem('client'),
@@ -34,23 +58,17 @@ export default function AuthenticatedApp() {
     );
   }
 
+  function handleDayClick(day) {
+    setSelectedDay(day);
+  }
+
   useEffect(() => {
     async function fetchData() {
-      const fetchGoals = axios({
-        method: 'get',
-        url: goalsUrl,
-        headers
-      });
-
-      const fetchCategories = axios({
-        method: 'get',
-        url: categoriesUrl,
-        headers
-      });
+      console.log('FETCHING DATA ...');
 
       const [goalRes, categoryRes] = await Promise.all([
-        fetchGoals,
-        fetchCategories
+        fetchGoals(),
+        fetchCategories()
       ]);
 
       setGoals(goalRes.data.data);
@@ -59,8 +77,24 @@ export default function AuthenticatedApp() {
       setIsLoading(false);
     }
 
+    async function fetchGoals() {
+      return axios({
+        method: 'get',
+        url: `${goalsUrl}?date=${selectedDay}`,
+        headers
+      });
+    }
+
+    async function fetchCategories() {
+      return axios({
+        method: 'get',
+        url: categoriesUrl,
+        headers
+      });
+    }
+
     fetchData();
-  }, []);
+  }, [selectedDay]);
 
   useEffect(() => {
     setFilteredGoals(filterByCategory(goals));
@@ -71,7 +105,7 @@ export default function AuthenticatedApp() {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div className="main-container">
+        <div className={classes.mainContainer}>
           <div className={classes.categoryContainer}>
             <CategoriesList
               categories={categories}
@@ -79,7 +113,10 @@ export default function AuthenticatedApp() {
               setCurrentCategory={setCurrentCategory}
             />
           </div>
-          <div className="goals-container">
+          <div className={classes.calendar}>
+            <DayPicker onDayClick={handleDayClick} selectedDays={selectedDay} />
+          </div>
+          <div className={classes.goalsContainer}>
             <GoalsList
               allGoals={goals}
               setAllGoals={setGoals}
