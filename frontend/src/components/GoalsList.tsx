@@ -9,6 +9,9 @@ import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
 import CompletionRate from './CompletionRate';
+import Goal from './Goal';
+import Headers from './Headers';
+import Category from './Category';
 
 const url = 'http://localhost:3001/api/v1/goals';
 
@@ -18,23 +21,34 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function GoalsList({
-  allGoals,
-  setAllGoals,
-  filteredGoals,
-  setFilteredGoals,
-  headers,
-  currentCategory
-}) {
+interface Props {
+  allGoals: Goal[];
+  setAllGoals: (goals: Goal[]) => any;
+  filteredGoals: Goal[];
+  setFilteredGoals: (goals: Goal[]) => any;
+  headers: Headers;
+  currentCategory: Category;
+}
+
+export default function GoalsList(props: Props) {
+  const {
+    allGoals,
+    setAllGoals,
+    filteredGoals,
+    setFilteredGoals,
+    headers,
+    currentCategory
+  } = props;
+
   const classes = useStyles();
 
-  const [description, setDescription] = useState('');
-  const [checked, setChecked] = useState([]);
+  const [description, setDescription] = useState<string>('');
+  const [checked, setChecked] = useState<number[]>([]);
 
-  function checkCompleteStatus(goals) {
-    const goalIds = [];
+  function checkCompleteStatus(goals: Goal[]): number[] {
+    const goalIds: number[] = [];
     goals.forEach((goal) => {
-      if (goal.attributes.complete) {
+      if (goal.complete) {
         goalIds.push(goal.id);
       }
     });
@@ -50,7 +64,7 @@ export default function GoalsList({
       const res = await axios({
         method: 'post',
         url,
-        headers,
+        headers: headers.formatted,
         data: {
           goal: {
             description,
@@ -58,16 +72,24 @@ export default function GoalsList({
           }
         }
       });
-
-      setAllGoals([...allGoals, res.data.data]);
-      setFilteredGoals([...filteredGoals, res.data.data]);
+      const goalRes = res.data.data;
+      const newGoal = new Goal(
+        goalRes.id,
+        goalRes.attributes.user_id,
+        goalRes.attributes.description,
+        goalRes.attributes.complete,
+        goalRes.attributes.category_id
+      );
+      setAllGoals([...allGoals, newGoal]);
+      setFilteredGoals([...filteredGoals, newGoal]);
+      setDescription('');
       console.log('Created goal');
     } catch (err) {
       console.log(err);
     }
   }
 
-  async function handleToggle(goalId) {
+  async function handleToggle(goalId: number) {
     const currentIndex = checked.indexOf(goalId);
     const newChecked = [...checked];
     const goalComplete = currentIndex ? true : false;
@@ -82,14 +104,14 @@ export default function GoalsList({
       await axios({
         method: 'patch',
         url: `${url}/${goalId}`,
-        headers,
+        headers: headers.formatted,
         data: { goal: { complete: goalComplete } }
       });
 
       const updatedGoals = [...allGoals];
       updatedGoals.forEach((goal, index, array) => {
         if (goal.id === goalId) {
-          array[index].attributes.complete = goalComplete;
+          array[index].complete = goalComplete;
         }
       });
       setAllGoals(updatedGoals);
@@ -100,7 +122,7 @@ export default function GoalsList({
     }
   }
 
-  async function deleteGoal(id) {
+  async function deleteGoal(id: number) {
     if (checked.includes(id)) {
       const index = checked.indexOf(id);
       const updatedChecked = [...checked];
@@ -118,7 +140,7 @@ export default function GoalsList({
       await axios({
         method: 'delete',
         url: `${url}/${id}`,
-        headers
+        headers: headers.formatted
       });
       console.log('Goal deleted');
     } catch (error) {
@@ -157,10 +179,7 @@ export default function GoalsList({
                   onClick={() => handleToggle(goal.id)}
                 />
               </ListItemIcon>
-              <ListItemText
-                id={labelId}
-                primary={goal.attributes.description}
-              />
+              <ListItemText id={labelId} primary={goal.description} />
               <CloseIcon onClick={() => deleteGoal(goal.id)} />
             </ListItem>
           );

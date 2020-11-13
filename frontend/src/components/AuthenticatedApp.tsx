@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import CategoriesList from './CategoriesList';
+import Goal from './Goal';
+import Category from './Category';
+import Headers from './Headers';
 import GoalsList from './GoalsList';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
@@ -39,49 +42,38 @@ const useStyles = makeStyles(() => ({
 export default function AuthenticatedApp() {
   const classes = useStyles();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [goals, setGoals] = useState([]);
-  const [filteredGoals, setFilteredGoals] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [currentCategory, setCurrentCategory] = useState();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [filteredGoals, setFilteredGoals] = useState<Goal[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [currentCategory, setCurrentCategory] = useState<any>();
   const [selectedDay, setSelectedDay] = useState(new Date());
 
-  const headers = {
-    'access-token': localStorage.getItem('access-token'),
-    client: localStorage.getItem('client'),
-    uid: localStorage.getItem('uid')
-  };
+  const headers = new Headers(
+    localStorage.getItem('access-token'),
+    localStorage.getItem('client'),
+    localStorage.getItem('uid')
+  );
 
-  function filterByCategory(goals) {
-    return goals.filter(
-      (goal) => goal.attributes.category_id === Number(currentCategory.id)
-    );
+  function filterByCategory(goals: Goal[]) {
+    if (goals.length > 0) {
+      return goals.filter(
+        (goal) => goal.category_id === Number(currentCategory.id)
+      );
+    }
+    return [];
   }
 
-  function handleDayClick(day) {
+  function handleDayClick(day: any) {
     setSelectedDay(day);
   }
 
   useEffect(() => {
-    async function fetchData() {
-      console.log('FETCHING DATA ...');
-
-      const [goalRes, categoryRes] = await Promise.all([
-        fetchGoals(),
-        fetchCategories()
-      ]);
-
-      setGoals(goalRes.data.data);
-      setCategories(categoryRes.data.data);
-      setCurrentCategory(categoryRes.data.data[0]); // Set the first category as the default
-      setIsLoading(false);
-    }
-
     async function fetchGoals() {
       return axios({
         method: 'get',
         url: `${goalsUrl}?date=${selectedDay}`,
-        headers
+        headers: headers.formatted
       });
     }
 
@@ -89,8 +81,36 @@ export default function AuthenticatedApp() {
       return axios({
         method: 'get',
         url: categoriesUrl,
-        headers
+        headers: headers.formatted
       });
+    }
+
+    async function fetchData() {
+      console.log('FETCHING DATA ...');
+      const [goalRes, categoryRes] = await Promise.all([
+        fetchGoals(),
+        fetchCategories()
+      ]);
+
+      setGoals(
+        goalRes.data.data.map(
+          (goal: any) =>
+            new Goal(
+              goal.id,
+              goal.attributes.user_id,
+              goal.attributes.description,
+              goal.attributes.complete,
+              goal.attributes.category_id
+            )
+        )
+      );
+
+      setCategories(
+        categoryRes.data.data.map(
+          (category: any) =>
+            new Category(category.id, category.attributes.title)
+        )
+      );
     }
 
     fetchData();
@@ -99,6 +119,13 @@ export default function AuthenticatedApp() {
   useEffect(() => {
     setFilteredGoals(filterByCategory(goals));
   }, [currentCategory]);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setCurrentCategory(categories[0]); // Set the first category as the default
+      setIsLoading(false);
+    }
+  }, [goals, categories]);
 
   return (
     <>
@@ -111,6 +138,7 @@ export default function AuthenticatedApp() {
               categories={categories}
               headers={headers}
               setCurrentCategory={setCurrentCategory}
+              setCategories={setCategories}
             />
           </div>
           <div className={classes.calendar}>

@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { FullPageSpinner } from './components/FullPageSpinner';
+// import { FullPageSpinner } from './components/FullPageSpinner';
 
-const AuthContext = React.createContext();
+const defaultContext = {
+  user: '',
+  login: (...args: any) => null,
+  logout: (...args: any) => null,
+  register: (...args: any) => null
+};
+
+const AuthContext = React.createContext(defaultContext);
 const signInUrl = 'http://localhost:3001/auth/sign_in';
 const registerUrl = 'http://localhost:3001/auth';
 
-function AuthProvider(props) {
+function AuthProvider(props: any) {
   const userExists = localStorage.getItem('uid');
   const [user, setUser] = useState(userExists);
   const history = useHistory();
@@ -24,7 +31,7 @@ function AuthProvider(props) {
   //   return <FullPageSpinner />;
   // }
 
-  async function login(email, password) {
+  async function login(email: string, password: string) {
     try {
       const res = await axios({
         method: 'post',
@@ -43,7 +50,17 @@ function AuthProvider(props) {
     }
   }
 
-  async function register(email, password, firstName, lastName) {
+  async function logout() {
+    localStorage.clear();
+    setUser('');
+  }
+
+  async function register(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) {
     try {
       const res = await axios({
         method: 'post',
@@ -51,8 +68,8 @@ function AuthProvider(props) {
         data: JSON.stringify({
           email,
           password,
-          'first_name': firstName,
-          'last_name': lastName
+          first_name: firstName,
+          last_name: lastName
         }),
         headers: { 'Content-Type': 'application/json' }
       });
@@ -61,11 +78,6 @@ function AuthProvider(props) {
     } catch (err) {
       console.log(err);
     }
-  }
-
-  async function logout() {
-    localStorage.clear();
-    setUser(null);
   }
 
   return (
