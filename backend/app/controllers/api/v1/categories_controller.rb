@@ -31,7 +31,7 @@ class Api::V1::CategoriesController < ApplicationController
       @category = Category.new(category_params)
 
       if @category.save
-        head :created
+        render json: @category
       else
         puts @category.errors
         head :unprocessable_entity
