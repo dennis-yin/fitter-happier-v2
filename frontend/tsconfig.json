@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2018",
     "checkJs": false,
     "allowJs": true,
     "watch": true,
     "lib": [
       "DOM",
-      "ES2017"
+      "ES2018"
     ],
     "skipLibCheck": true,
     "noImplicitReturns": true,

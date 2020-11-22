@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-interface Props {
+export interface Props {
   allGoals: Goal[];
   setAllGoals: (goals: Goal[]) => any;
   filteredGoals: Goal[];
@@ -30,16 +30,14 @@ interface Props {
   currentCategory: Category;
 }
 
-export default function GoalsList(props: Props) {
-  const {
-    allGoals,
-    setAllGoals,
-    filteredGoals,
-    setFilteredGoals,
-    headers,
-    currentCategory
-  } = props;
-
+export default function GoalsList({
+  allGoals,
+  setAllGoals,
+  filteredGoals,
+  setFilteredGoals,
+  headers,
+  currentCategory
+}: Props) {
   const classes = useStyles();
 
   const [description, setDescription] = useState<string>('');

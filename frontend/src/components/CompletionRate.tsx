@@ -6,8 +6,7 @@ interface Props {
   goals: Goal[];
 }
 
-function CompletionRate(props: Props) {
-  const { completedGoals, goals } = props;
+function CompletionRate({ completedGoals, goals }: Props) {
   const [completionRate, setCompletionRate] = useState<number>(0);
 
   function calculateCompletionRate(numCompleted: number, numGoals: number) {

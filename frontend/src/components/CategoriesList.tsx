@@ -20,8 +20,12 @@ function createOption(label: string) {
   };
 }
 
-function CategoriesList(props: Props) {
-  const { categories, setCurrentCategory, setCategories, headers } = props;
+function CategoriesList({
+  categories,
+  setCurrentCategory,
+  setCategories,
+  headers
+}: Props) {
   const [options, setOptions] = useState<any>();
   const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
