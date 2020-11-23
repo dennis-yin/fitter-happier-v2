@@ -7,13 +7,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
-import axios from 'axios';
 import CompletionRate from './CompletionRate';
-import Goal from './Goal';
-import Headers from './Headers';
+import Goal, { createGoal, toggleComplete } from './Goal';
 import Category from './Category';
-
-const url = 'http://localhost:3001/api/v1/goals';
 
 const useStyles = makeStyles(() => ({
   listItem: {
@@ -22,26 +18,23 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  allGoals: Goal[];
-  setAllGoals: (goals: Goal[]) => any;
-  filteredGoals: Goal[];
-  setFilteredGoals: (goals: Goal[]) => any;
-  headers: Headers;
+  goals: Goal[];
   currentCategory: Category;
+  dispatch: any;
 }
 
-export default function GoalsList(props: Props) {
-  const {
-    allGoals,
-    setAllGoals,
-    filteredGoals,
-    setFilteredGoals,
-    headers,
-    currentCategory
-  } = props;
+function filterGoals(goals: Goal[], category: Category) {
+  if (goals.length > 0) {
+    return goals.filter((goal) => goal.category_id === Number(category.id));
 
+  }
+  return [];
+}
+
+export default function GoalsList({ goals, currentCategory, dispatch }: Props) {
   const classes = useStyles();
 
+  const [filteredGoals, setFilteredGoals] = useState<Goal[]>([]);
   const [description, setDescription] = useState<string>('');
   const [checked, setChecked] = useState<number[]>([]);
 
@@ -56,73 +49,71 @@ export default function GoalsList(props: Props) {
   }
 
   useEffect(() => {
-    setChecked(checkCompleteStatus(filteredGoals));
-  }, [filteredGoals]);
+    setFilteredGoals(filterGoals(goals, currentCategory));
+  }, [currentCategory, goals]);
 
-  async function createGoal() {
-    try {
-      const res = await axios({
-        method: 'post',
-        url,
-        headers: headers.formatted,
-        data: {
-          goal: {
-            description,
-            category_id: currentCategory.id
-          }
-        }
-      });
-      const goalRes = res.data.data;
-      const newGoal = new Goal(
-        goalRes.id,
-        goalRes.attributes.user_id,
-        goalRes.attributes.description,
-        goalRes.attributes.complete,
-        goalRes.attributes.category_id
-      );
-      setAllGoals([...allGoals, newGoal]);
-      setFilteredGoals([...filteredGoals, newGoal]);
-      setDescription('');
-      console.log('Created goal');
-    } catch (err) {
-      console.log(err);
-    }
+  useEffect(() => {
+    setChecked(checkCompleteStatus(goals));
+  }, [goals]);
+
+  function handleCreate() {
+    createGoal(description, currentCategory.id)
+      .then((res) => {
+        debugger;
+        const {
+          id,
+          attributes: { user_id, description, complete, category_id }
+        } = res.data.data;
+        const newGoal = new Goal(
+          id,
+          user_id,
+          description,
+          complete,
+          category_id
+        );
+        dispatch({ type: 'CREATE_GOAL', data: { newGoal } });
+      })
+      .catch((err) => console.log(err));
+    setDescription('');
+    console.log('Created goal');
   }
 
-  async function handleToggle(goalId: number) {
-    const currentIndex = checked.indexOf(goalId);
-    const newChecked = [...checked];
-    const goalComplete = currentIndex ? true : false;
+  function handleToggle(id: number) {
+    const currentIndex = checked.indexOf(id);
+    const isComplete = currentIndex ? true : false;
 
     if (currentIndex === -1) {
-      newChecked.push(goalId);
+      setChecked([...checked, id]);
     } else {
-      newChecked.splice(currentIndex, 1);
+      setChecked(checked.filter((_) => checked.indexOf(_) !== currentIndex));
     }
 
-    try {
-      await axios({
-        method: 'patch',
-        url: `${url}/${goalId}`,
-        headers: headers.formatted,
-        data: { goal: { complete: goalComplete } }
+    toggleComplete(id, isComplete)
+      .then((res) => {
+        const {
+          id,
+          attributes: { user_id, description, complete, category_id }
+        } = res.data.data;
+        const updatedGoal = new Goal(
+          id,
+          user_id,
+          description,
+          complete,
+          category_id
+        );
+        dispatch({
+          type: 'UPDATE_GOAL',
+          data: { updatedGoal }
+        });
+        console.log('Goal updated');
+      })
+      .catch((err) => {
+        console.log(err);
       });
-
-      const updatedGoals = [...allGoals];
-      updatedGoals.forEach((goal, index, array) => {
-        if (goal.id === goalId) {
-          array[index].complete = goalComplete;
-        }
-      });
-      setAllGoals(updatedGoals);
-      setChecked(newChecked);
-      console.log('Goal updated');
-    } catch (error) {
-      console.log(error);
-    }
   }
 
-  async function deleteGoal(id: number) {
+  // TODO
+  function deleteGoal(id: number) {
     if (checked.includes(id)) {
       const index = checked.indexOf(id);
       const updatedChecked = [...checked];
@@ -130,22 +121,8 @@ export default function GoalsList(props: Props) {
       setChecked(updatedChecked);
     }
 
-    const updatedFilteredGoals = filteredGoals.filter((goal) => goal.id !== id);
-    setFilteredGoals(updatedFilteredGoals);
-
-    const updatedGoals = allGoals.filter((goal) => goal.id !== id);
-    setAllGoals(updatedGoals);
-
-    try {
-      await axios({
-        method: 'delete',
-        url: `${url}/${id}`,
-        headers: headers.formatted
-      });
-      console.log('Goal deleted');
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch({ type: 'DELETE_GOAL', data: { id } });
+    // dispatch({ type: 'GET_GOALS' });
   }
 
   return (
@@ -153,7 +130,7 @@ export default function GoalsList(props: Props) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createGoal();
+          handleCreate();
         }}
       >
         <TextField

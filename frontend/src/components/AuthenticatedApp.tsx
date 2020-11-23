@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
+import reducer from '../reducers/app';
 import CategoriesList from './CategoriesList';
-import Goal from './Goal';
-import Category from './Category';
-import Headers from './Headers';
+import Goal, { fetchGoals } from './Goal';
+import Category, { fetchCategories } from './Category';
 import GoalsList from './GoalsList';
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
-
-const goalsUrl = 'http://localhost:3001/api/v1/goals';
-const categoriesUrl = 'http://localhost:3001/api/v1/categories';
 
 const useStyles = makeStyles(() => ({
   mainContainer: {
@@ -39,119 +36,82 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+export interface State {
+  isLoading: boolean;
+  categories: Category[];
+  goals: Goal[];
+  currentCategory?: Category;
+  selectedDay: Date;
+}
+
+const initialState: State = {
+  isLoading: true,
+  categories: [],
+  goals: [],
+  selectedDay: new Date()
+};
+
 export default function AuthenticatedApp() {
   const classes = useStyles();
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [goals, setGoals] = useState<Goal[]>([]);
-  const [filteredGoals, setFilteredGoals] = useState<Goal[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [currentCategory, setCurrentCategory] = useState<any>();
-  const [selectedDay, setSelectedDay] = useState(new Date());
-
-  const headers = new Headers(
-    localStorage.getItem('access-token'),
-    localStorage.getItem('client'),
-    localStorage.getItem('uid')
+  ['access-token', 'client', 'uid'].forEach(
+    (key) => (axios.defaults.headers.common[key] = localStorage.getItem(key))
   );
 
-  function filterByCategory(goals: Goal[]) {
-    if (goals.length > 0) {
-      return goals.filter(
-        (goal) => goal.category_id === Number(currentCategory.id)
-      );
-    }
-    return [];
-  }
-
-  function handleDayClick(day: any) {
-    setSelectedDay(day);
+  function handleDayClick(day: Date) {
+    dispatch({ type: 'SELECT_DAY', data: day });
   }
 
   useEffect(() => {
-    async function fetchGoals() {
-      return axios({
-        method: 'get',
-        url: `${goalsUrl}?date=${selectedDay}`,
-        headers: headers.formatted
-      });
-    }
-
-    async function fetchCategories() {
-      return axios({
-        method: 'get',
-        url: categoriesUrl,
-        headers: headers.formatted
-      });
-    }
-
-    async function fetchData() {
-      console.log('FETCHING DATA ...');
-      const [goalRes, categoryRes] = await Promise.all([
-        fetchGoals(),
-        fetchCategories()
-      ]);
-
-      setGoals(
-        goalRes.data.data.map(
-          (goal: any) =>
-            new Goal(
-              goal.id,
-              goal.attributes.user_id,
-              goal.attributes.description,
-              goal.attributes.complete,
-              goal.attributes.category_id
-            )
-        )
-      );
-
-      setCategories(
-        categoryRes.data.data.map(
-          (category: any) =>
-            new Category(category.id, category.attributes.title)
-        )
-      );
-    }
-
-    fetchData();
-  }, [selectedDay]);
+    Promise.all([fetchCategories(), fetchGoals(state.selectedDay)]).then(
+      (res) => {
+        console.log('FETCHING DATA FOR THE FIRST TIME ...');
+        dispatch({
+          type: 'SET_CATEGORIES',
+          data: res[0].data.data,
+          initialRender: true
+        });
+        dispatch({ type: 'SET_GOALS', data: res[1].data.data });
+        dispatch({ type: 'TOGGLE_LOADING' });
+      }
+    );
+  }, []);
 
   useEffect(() => {
-    setFilteredGoals(filterByCategory(goals));
-  }, [currentCategory]);
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      setCurrentCategory(categories[0]); // Set the first category as the default
-      setIsLoading(false);
-    }
-  }, [goals, categories]);
+    Promise.all([fetchCategories(), fetchGoals(state.selectedDay)]).then(
+      (res) => {
+        console.log('FETCHING DATA ...');
+        dispatch({
+          type: 'SET_CATEGORIES',
+          data: res[0].data.data,
+          initialRender: false
+        });
+        dispatch({ type: 'SET_GOALS', data: res[1].data.data });
+      }
+    );
+  }, [state.selectedDay]);
 
   return (
     <>
-      {isLoading ? (
+      {state.isLoading ? (
         <div>Loading...</div>
       ) : (
         <div className={classes.mainContainer}>
           <div className={classes.categoryContainer}>
-            <CategoriesList
-              categories={categories}
-              headers={headers}
-              setCurrentCategory={setCurrentCategory}
-              setCategories={setCategories}
-            />
+            <CategoriesList categories={state.categories} dispatch={dispatch} />
           </div>
           <div className={classes.calendar}>
-            <DayPicker onDayClick={handleDayClick} selectedDays={selectedDay} />
+            <DayPicker
+              onDayClick={handleDayClick}
+              selectedDays={state.selectedDay}
+            />
           </div>
           <div className={classes.goalsContainer}>
             <GoalsList
-              allGoals={goals}
-              setAllGoals={setGoals}
-              filteredGoals={filteredGoals}
-              setFilteredGoals={setFilteredGoals}
-              headers={headers}
-              currentCategory={currentCategory}
+              goals={state.goals}
+              currentCategory={state.currentCategory}
+              dispatch={dispatch}
             />
           </div>
         </div>

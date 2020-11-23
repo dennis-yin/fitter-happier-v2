@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import axios from 'axios';
-import Category from './Category';
-import Headers from './Headers';
-
-const url = 'http://localhost:3001/api/v1/categories';
+import Category, { fetchCategories, createCategory } from './Category';
 
 interface Props {
   categories: Category[];
-  setCurrentCategory: (category: Category) => any;
-  setCategories: (categories: Category[]) => any;
-  headers: Headers;
+  dispatch: any;
 }
 
 function createOption(label: string) {
@@ -20,8 +14,7 @@ function createOption(label: string) {
   };
 }
 
-function CategoriesList(props: Props) {
-  const { categories, setCurrentCategory, setCategories, headers } = props;
+function CategoriesList({ categories, dispatch }: Props) {
   const [options, setOptions] = useState<any>();
   const [newCategoryTitle, setNewCategoryTitle] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,28 +29,18 @@ function CategoriesList(props: Props) {
 
   function handleChange(newValue: any, actionMeta: any) {
     if (actionMeta.action === 'select-option') {
-      setCurrentCategory(
-        categories.filter((category) => category.title === newValue.label)[0]
-      );
+      dispatch({ type: 'SELECT_CATEGORY', data: newValue.label });
     }
   }
 
-  async function handleCreate() {
+  function handleCreate() {
     setIsLoading(true);
-    try {
-      const res = await axios({
-        method: 'post',
-        url,
-        headers: headers.formatted,
-        data: { category: { title: newCategoryTitle } }
+    createCategory(newCategoryTitle).then((_) => {
+      fetchCategories().then((res) => {
+        dispatch({ type: 'SET_CATEGORIES', data: res.data.data });
+        setIsLoading(false);
       });
-      setOptions([...options, createOption(newCategoryTitle)]);
-      setCategories([...categories, new Category(res.data.id, res.data.title)]);
-      setIsLoading(false);
-    } catch (err) {
-      console.log(err);
-      setIsLoading(false);
-    }
+    });
   }
 
   return (
