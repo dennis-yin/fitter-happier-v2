@@ -14,25 +14,29 @@ const useStyles = makeStyles(() => ({
     height: '90vh',
     display: 'grid',
     gridTemplateColumns: '15% 25% 45% 15%',
-    gridTemplateRows: '20% 10% 60% 10%',
+    gridTemplateRows: '20% 70% 10%',
     columnGap: '10px',
     rowGap: '10px',
     justifyItems: 'center',
     alignItems: 'center'
   },
-  categoryContainer: {
+  leftColumn: {
     gridColumn: '2 / 3',
-    gridRow: '2 / 3',
+    gridRow: '2 / 3'
+  },
+  rightColumn: {
+    gridColumn: '3 / 4',
+    gridRow: '2 / 3'
+  },
+  categoryContainer: {
     justifySelf: 'stretch'
   },
-  goalsContainer: {
-    gridColumn: '3 / 4',
-    gridRow: '2 / 4'
-  },
+  goalsContainer: {},
   calendar: {
-    gridColumn: '2 / 3',
-    gridRow: '3 / 4',
     alignSelf: 'start'
+  },
+  dayPicker: {
+    fontSize: '1.7rem'
   }
 }));
 
@@ -98,21 +102,29 @@ export default function AuthenticatedApp() {
         <div>Loading...</div>
       ) : (
         <div className={classes.mainContainer}>
-          <div className={classes.categoryContainer}>
-            <CategoriesList categories={state.categories} dispatch={dispatch} />
+          <div className={classes.leftColumn}>
+            <div className={classes.categoryContainer}>
+              <CategoriesList
+                categories={state.categories}
+                dispatch={dispatch}
+              />
+            </div>
+            <div className={classes.calendar}>
+              <DayPicker
+                className={classes.dayPicker}
+                onDayClick={handleDayClick}
+                selectedDays={state.selectedDay}
+              />
+            </div>
           </div>
-          <div className={classes.calendar}>
-            <DayPicker
-              onDayClick={handleDayClick}
-              selectedDays={state.selectedDay}
-            />
-          </div>
-          <div className={classes.goalsContainer}>
-            <GoalsList
-              goals={state.goals}
-              currentCategory={state.currentCategory}
-              dispatch={dispatch}
-            />
+          <div className={classes.rightColumn}>
+            <div className={classes.goalsContainer}>
+              <GoalsList
+                goals={state.goals}
+                currentCategory={state.currentCategory}
+                dispatch={dispatch}
+              />
+            </div>
           </div>
         </div>
       )}

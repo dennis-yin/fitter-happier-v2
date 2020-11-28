@@ -24,9 +24,7 @@ export default class Goal {
 }
 
 export function fetchGoals(date?: string) {
-  if (date) return axios.get(`${goalsUrl}?date=${date}`);
-  return axios.get(goalsUrl);
-  // return date ? axios.get(`${goalsUrl}?date=${date}`) : axios.get(goalsUrl)
+  return date ? axios.get(`${goalsUrl}?date=${date}`) : axios.get(goalsUrl);
 }
 
 export function createGoal(description: String, category_id: number) {
@@ -39,4 +37,8 @@ export function toggleComplete(id: number, isComplete: boolean) {
   return axios.patch(`${goalsUrl}/${id}`, {
     goal: { complete: !isComplete }
   });
+}
+
+export function deleteGoal(id: number) {
+  return axios.delete(`${goalsUrl}/${id}`);
 }

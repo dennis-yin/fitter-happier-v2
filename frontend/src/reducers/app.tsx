@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { State } from '../components/AuthenticatedApp';
 import Category from '../components/Category';
 import Goal from '../components/Goal';
@@ -70,21 +69,16 @@ export default function reducer(state: State, action: any) {
         ...state.goals.filter((goal) => goal.id !== action.data.updatedGoal.id),
         action.data.updatedGoal
       ];
-      debugger;
       return {
         ...state,
         goals: newGoals
       };
 
     case 'DELETE_GOAL':
-      break;
-    //   axios
-    //     .delete(`${goalsUrl}/${action.data.id}`)
-    //     .then((res) => console.log('Goal deleted'))
-    //     .catch((error) => {
-    //       throw new Error('Error deleting goal');
-    //     });
-    //   break;
+      return {
+        ...state,
+        goals: state.goals.filter((goal) => goal.id !== action.data.id)
+      };
 
     case 'SELECT_DAY':
       return {

@@ -8,7 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
 import CompletionRate from './CompletionRate';
-import Goal, { createGoal, toggleComplete } from './Goal';
+import Goal, { createGoal, toggleComplete, deleteGoal } from './Goal';
 import Category from './Category';
 
 const useStyles = makeStyles(() => ({
@@ -26,7 +26,6 @@ interface Props {
 function filterGoals(goals: Goal[], category: Category) {
   if (goals.length > 0) {
     return goals.filter((goal) => goal.category_id === Number(category.id));
-
   }
   return [];
 }
@@ -112,17 +111,16 @@ export default function GoalsList({ goals, currentCategory, dispatch }: Props) {
       });
   }
 
-  // TODO
-  function deleteGoal(id: number) {
-    if (checked.includes(id)) {
-      const index = checked.indexOf(id);
-      const updatedChecked = [...checked];
-      updatedChecked.splice(index, 1);
-      setChecked(updatedChecked);
-    }
-
-    dispatch({ type: 'DELETE_GOAL', data: { id } });
-    // dispatch({ type: 'GET_GOALS' });
+  function handleDelete(id: number) {
+    deleteGoal(id)
+      .then((res) => {
+        if (checked.includes(id)) {
+          setChecked([...checked.filter((c) => c !== id)]);
+        }
+        dispatch({ type: 'DELETE_GOAL', data: { id } });
+        console.log('Goal deleted');
+      })
+      .catch((err) => console.log('Error deleting goal'));
   }
 
   return (
@@ -157,7 +155,7 @@ export default function GoalsList({ goals, currentCategory, dispatch }: Props) {
                 />
               </ListItemIcon>
               <ListItemText id={labelId} primary={goal.description} />
-              <CloseIcon onClick={() => deleteGoal(goal.id)} />
+              <CloseIcon onClick={() => handleDelete(goal.id)} />
             </ListItem>
           );
         })}
