@@ -80,7 +80,7 @@ export default function GoalsList({ goals, currentCategory, dispatch }: Props) {
 
   function handleToggle(id: number) {
     const currentIndex = checked.indexOf(id);
-    const isComplete = currentIndex ? true : false;
+    const isComplete = currentIndex >= 0 ? true : false;
 
     if (currentIndex === -1) {
       setChecked([...checked, id]);
