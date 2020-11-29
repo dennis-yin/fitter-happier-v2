@@ -22,7 +22,7 @@ class Api::V1::GoalsController < ApplicationController
     )
 
     if @goal.save
-      render json: GoalSerializer.new(@goal).serializable_hash.to_json
+      respond_with_goal
     else
       puts @goal.errors
       head :unprocessable_entity
@@ -31,7 +31,7 @@ class Api::V1::GoalsController < ApplicationController
 
   def update
     if @goal.update(goal_params)
-      head :ok
+      respond_with_goal
     else
       puts @goal.errors
       head :unprocessable_entity
@@ -50,5 +50,9 @@ class Api::V1::GoalsController < ApplicationController
 
   def goal_params
     params.require(:goal).permit(:description, :category_id, :complete, :date)
+  end
+
+  def respond_with_goal
+    render json: GoalSerializer.new(@goal).serializable_hash.to_json
   end
 end

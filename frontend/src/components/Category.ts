@@ -1,3 +1,7 @@
+import axios from 'axios';
+
+const categoriesUrl = 'http://localhost:3001/api/v1/categories';
+
 export default class Category {
   id: number;
   title: string;
@@ -6,4 +10,12 @@ export default class Category {
     this.id = id;
     this.title = title;
   }
+}
+
+export function fetchCategories() {
+  return axios.get(categoriesUrl);
+}
+
+export function createCategory(title: string) {
+  return axios.post(categoriesUrl, { category: { title } });
 }
