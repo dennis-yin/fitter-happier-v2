@@ -10,43 +10,44 @@ import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 
 const useStyles = makeStyles(() => ({
-  mainContainer: {
+  app: {
     height: '90vh',
     display: 'grid',
-    gridTemplateColumns: '25% 25% 25% 25%',
+    gridTemplateColumns: '15% 70% 15%',
     gridTemplateRows: '20% 70% 10%',
     columnGap: '10px',
     rowGap: '10px',
     justifyItems: 'center',
     alignItems: 'center',
   },
-  leftColumn: {
+  mainContainer: {
     gridColumn: '2 / 3',
     gridRow: '2 / 3',
     boxShadow: '0px 0px 20px 0px #949494',
     borderRadius: '15px',
-    height: '100%'
+    display: 'flex',
+    justifyContent: 'center',
+    padding: '15px'
+  },
+  leftColumn: {
+    // height: '100%'
   },
   rightColumn: {
-    gridColumn: '3 / 4',
-    gridRow: '2 / 3',
-    alignSelf: 'start',
-    boxShadow: '0px 0px 20px 0px #949494',
-    borderRadius: '15px',
-    height: '100%'
+    // alignSelf: 'start',
+    // height: '100%'
   },
   categoryContainer: {
-    justifySelf: 'stretch',
+    // justifySelf: 'stretch',
     margin: '2rem'
   },
   goalsContainer: {
-    justifySelf: 'stretch'
+    // justifySelf: 'stretch'
   },
   calendar: {
-    alignSelf: 'start'
+    // alignSelf: 'start'
   },
   dayPicker: {
-    fontSize: '1.7rem'
+    // fontSize: '1rem'
   }
 }));
 
@@ -111,29 +112,31 @@ export default function AuthenticatedApp() {
       {state.isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div className={classes.mainContainer}>
-          <div className={classes.leftColumn}>
-            <div className={classes.categoryContainer}>
-              <CategoriesList
-                categories={state.categories}
-                dispatch={dispatch}
-              />
+        <div className={classes.app}>
+          <div className={classes.mainContainer}>
+            <div className={classes.leftColumn}>
+              <div className={classes.categoryContainer}>
+                <CategoriesList
+                  categories={state.categories}
+                  dispatch={dispatch}
+                />
+              </div>
+              <div className={classes.calendar}>
+                <DayPicker
+                  className={classes.dayPicker}
+                  onDayClick={handleDayClick}
+                  selectedDays={state.selectedDay}
+                />
+              </div>
             </div>
-            <div className={classes.calendar}>
-              <DayPicker
-                className={classes.dayPicker}
-                onDayClick={handleDayClick}
-                selectedDays={state.selectedDay}
-              />
-            </div>
-          </div>
-          <div className={classes.rightColumn}>
-            <div className={classes.goalsContainer}>
-              <GoalsList
-                goals={state.goals}
-                currentCategory={state.currentCategory}
-                dispatch={dispatch}
-              />
+            <div className={classes.rightColumn}>
+              <div className={classes.goalsContainer}>
+                <GoalsList
+                  goals={state.goals}
+                  currentCategory={state.currentCategory}
+                  dispatch={dispatch}
+                />
+              </div>
             </div>
           </div>
         </div>
