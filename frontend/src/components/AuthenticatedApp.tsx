@@ -13,25 +13,35 @@ const useStyles = makeStyles(() => ({
   mainContainer: {
     height: '90vh',
     display: 'grid',
-    gridTemplateColumns: '15% 25% 45% 15%',
+    gridTemplateColumns: '25% 25% 25% 25%',
     gridTemplateRows: '20% 70% 10%',
     columnGap: '10px',
     rowGap: '10px',
     justifyItems: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   leftColumn: {
     gridColumn: '2 / 3',
-    gridRow: '2 / 3'
+    gridRow: '2 / 3',
+    boxShadow: '0px 0px 20px 0px #949494',
+    borderRadius: '15px',
+    height: '100%'
   },
   rightColumn: {
     gridColumn: '3 / 4',
-    gridRow: '2 / 3'
+    gridRow: '2 / 3',
+    alignSelf: 'start',
+    boxShadow: '0px 0px 20px 0px #949494',
+    borderRadius: '15px',
+    height: '100%'
   },
   categoryContainer: {
+    justifySelf: 'stretch',
+    margin: '2rem'
+  },
+  goalsContainer: {
     justifySelf: 'stretch'
   },
-  goalsContainer: {},
   calendar: {
     alignSelf: 'start'
   },
