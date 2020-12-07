@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Goal from './Goal';
+import Category from './Category';
+
+const useStyles = makeStyles(() => ({
+  completionRate: {
+    position: 'relative',
+    right: 'auto',
+    top: '1.7rem'
+  }
+}));
 
 interface Props {
-  completedGoals: number[];
   goals: Goal[];
+  currentCategory: Category;
 }
 
-function CompletionRate(props: Props) {
-  const { completedGoals, goals } = props;
+export default function CompletionRate({ goals, currentCategory }: Props) {
+  const classes = useStyles();
+
   const [completionRate, setCompletionRate] = useState<number>(0);
 
-  function calculateCompletionRate(numCompleted: number, numGoals: number) {
-    if (numGoals === 0) return 0; // So we don't divide by 0
-    return Math.round((numCompleted / numGoals) * 100);
+  function calculateCompletionRate() {
+    if (goals.length === 0) return 0; // So we don't divide by 0
+
+    const completed = goals.filter((goal) => goal.complete).length;
+
+    return Math.round((completed / goals.length) * 100);
   }
 
   useEffect(() => {
-    setCompletionRate(
-      calculateCompletionRate(completedGoals.length, goals.length)
-    );
-  }, [completedGoals, goals]);
+    setCompletionRate(calculateCompletionRate());
+  }, [goals, currentCategory]);
 
-  return (
-    <div className="completion-rate">
-      {completionRate == 100 ? '🔥 100' : `${completionRate}`}%
-    </div>
-  );
+  return <div className={classes.completionRate}>{completionRate}%</div>;
 }
-
-export default CompletionRate;

@@ -2,23 +2,24 @@ import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import reducer from '../reducers/app';
+import NavBar from './NavBar';
 import CategoriesList from './CategoriesList';
 import Goal, { fetchGoals } from './Goal';
 import Category, { fetchCategories } from './Category';
 import GoalsList from './GoalsList';
 import DayPicker from 'react-day-picker';
+import CompletionRate from './CompletionRate';
+import NewGoalField from './NewGoalField';
 import 'react-day-picker/lib/style.css';
 
 const useStyles = makeStyles(() => ({
   app: {
     height: '90vh',
     display: 'grid',
-    gridTemplateColumns: '15% 70% 15%',
-    gridTemplateRows: '20% 70% 10%',
-    columnGap: '10px',
-    rowGap: '10px',
+    gridTemplateColumns: '1.5fr 7fr 1.5fr',
+    gridTemplateRows: '2fr 7fr 1fr',
     justifyItems: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   mainContainer: {
     gridColumn: '2 / 3',
@@ -26,28 +27,35 @@ const useStyles = makeStyles(() => ({
     boxShadow: '0px 0px 20px 0px #949494',
     borderRadius: '15px',
     display: 'flex',
-    justifyContent: 'center',
-    padding: '15px'
+    justifyContent: 'space-evenly',
+    padding: '15px',
+    height: '100%'
   },
   leftColumn: {
-    // height: '100%'
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around'
   },
   rightColumn: {
-    // alignSelf: 'start',
-    // height: '100%'
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    height: '100%',
+    paddingTop: '2.8rem'
+  },
+  topRight: {
+    display: 'flex',
+    justifyContent: 'space-between'
   },
   categoryContainer: {
     // justifySelf: 'stretch',
     margin: '2rem'
   },
-  goalsContainer: {
-    // justifySelf: 'stretch'
-  },
   calendar: {
     // alignSelf: 'start'
   },
   dayPicker: {
-    // fontSize: '1rem'
+    fontSize: '1.5vw'
   }
 }));
 
@@ -113,6 +121,7 @@ export default function AuthenticatedApp() {
         <div>Loading...</div>
       ) : (
         <div className={classes.app}>
+          <NavBar />
           <div className={classes.mainContainer}>
             <div className={classes.leftColumn}>
               <div className={classes.categoryContainer}>
@@ -130,13 +139,21 @@ export default function AuthenticatedApp() {
               </div>
             </div>
             <div className={classes.rightColumn}>
-              <div className={classes.goalsContainer}>
-                <GoalsList
-                  goals={state.goals}
+              <div className={classes.topRight}>
+                <NewGoalField
                   currentCategory={state.currentCategory}
                   dispatch={dispatch}
                 />
+                <CompletionRate
+                  goals={state.goals}
+                  currentCategory={state.currentCategory}
+                />
               </div>
+              <GoalsList
+                goals={state.goals}
+                currentCategory={state.currentCategory}
+                dispatch={dispatch}
+              />
             </div>
           </div>
         </div>
