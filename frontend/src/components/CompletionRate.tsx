@@ -6,8 +6,8 @@ import Category from './Category';
 const useStyles = makeStyles(() => ({
   completionRate: {
     position: 'relative',
-    right: 'auto',
-    top: '1.7rem'
+    right: '1rem',
+    top: '0.6rem',
   }
 }));
 

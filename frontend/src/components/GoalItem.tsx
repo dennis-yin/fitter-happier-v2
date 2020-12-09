@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { IoIosCheckmarkCircle, IoIosCloseCircle } from 'react-icons/io';
 import Goal, { toggleComplete, deleteGoal } from './Goal';
 
 const useStyles = makeStyles(() => ({
   goalItem: {
-    width: '25em',
+    width: '20em',
     padding: '15px',
     border: '1px solid #3f7cc4',
     borderRadius: '20px',
@@ -15,8 +16,17 @@ const useStyles = makeStyles(() => ({
     marginBottom: '13px'
   },
   toggleButton: {
+    transform: 'scale(1.5)',
+    color: 'lightgreen',
     position: 'relative',
-    left: '8rem'
+    right: '0.8rem'
+  },
+  deleteButton: {
+    transform: 'scale(1.5)',
+    color: '#e34d42'
+  },
+  controls: {
+
   }
 }));
 
@@ -65,10 +75,16 @@ export default function GoalItem({ goal, dispatch }: Props) {
   return (
     <div className={`${classes.goalItem} ${goal.complete ? 'complete' : ''}`}>
       {goal.description}
-      <button className={classes.toggleButton} onClick={handleToggle}>
-        Toggle
-      </button>
-      <button onClick={handleDelete}>Delete</button>
+      <div className={classes.controls}>
+        <IoIosCheckmarkCircle
+          className={classes.toggleButton}
+          onClick={handleToggle}
+        />
+        <IoIosCloseCircle
+          className={classes.deleteButton}
+          onClick={handleDelete}
+        />
+      </div>
     </div>
   );
 }

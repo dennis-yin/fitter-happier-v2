@@ -29,23 +29,22 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'space-evenly',
     padding: '15px',
-    height: '100%'
+    height: '90%'
   },
   leftColumn: {
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around'
+    flexDirection: 'column'
   },
   rightColumn: {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    paddingTop: '2.8rem'
+    padding: '2rem 1.5rem 0 0'
   },
   topRight: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: '5rem'
+    marginBottom: '3.2rem'
   },
   categoryContainer: {
     // justifySelf: 'stretch',
