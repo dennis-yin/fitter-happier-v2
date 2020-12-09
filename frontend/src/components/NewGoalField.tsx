@@ -6,7 +6,8 @@ import Goal, { createGoal } from './Goal';
 const useStyles = makeStyles(() => ({
   newGoalField: {
     height: '31px',
-    width: '70%',
+    width: '160%',
+    fontSize: '1rem'
   }
 }));
 

@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     backgroundColor: '#4a90e2',
     color: 'white',
-    marginBottom: '10px'
+    marginBottom: '13px'
   },
   toggleButton: {
     position: 'relative',

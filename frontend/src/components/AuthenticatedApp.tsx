@@ -39,13 +39,13 @@ const useStyles = makeStyles(() => ({
   rightColumn: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
     height: '100%',
     paddingTop: '2.8rem'
   },
   topRight: {
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: '5rem'
   },
   categoryContainer: {
     // justifySelf: 'stretch',
