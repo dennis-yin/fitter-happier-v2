@@ -65,13 +65,14 @@ export default function reducer(state: State, action: any) {
       };
 
     case 'UPDATE_GOAL':
-      const newGoals = [
-        ...state.goals.filter((goal) => goal.id !== action.data.updatedGoal.id),
-        action.data.updatedGoal
-      ];
       return {
         ...state,
-        goals: newGoals
+        goals: [
+          ...state.goals.filter(
+            (goal) => goal.id !== action.data.updatedGoal.id
+          ),
+          action.data.updatedGoal
+        ]
       };
 
     case 'DELETE_GOAL':

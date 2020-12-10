@@ -2,41 +2,59 @@ import React, { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import reducer from '../reducers/app';
+import NavBar from './NavBar';
 import CategoriesList from './CategoriesList';
 import Goal, { fetchGoals } from './Goal';
 import Category, { fetchCategories } from './Category';
 import GoalsList from './GoalsList';
 import DayPicker from 'react-day-picker';
+import CompletionRate from './CompletionRate';
+import NewGoalField from './NewGoalField';
 import 'react-day-picker/lib/style.css';
 
 const useStyles = makeStyles(() => ({
-  mainContainer: {
+  app: {
     height: '90vh',
     display: 'grid',
-    gridTemplateColumns: '15% 25% 45% 15%',
-    gridTemplateRows: '20% 70% 10%',
-    columnGap: '10px',
-    rowGap: '10px',
+    gridTemplateColumns: '1.5fr 7fr 1.5fr',
+    gridTemplateRows: '2fr 7fr 1fr',
     justifyItems: 'center',
     alignItems: 'center'
   },
-  leftColumn: {
+  mainContainer: {
     gridColumn: '2 / 3',
-    gridRow: '2 / 3'
+    gridRow: '2 / 3',
+    boxShadow: '0px 0px 20px 0px #949494',
+    borderRadius: '15px',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    padding: '15px',
+    height: '90%'
+  },
+  leftColumn: {
+    display: 'flex',
+    flexDirection: 'column'
   },
   rightColumn: {
-    gridColumn: '3 / 4',
-    gridRow: '2 / 3'
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    padding: '2rem 1.5rem 0 0'
+  },
+  topRight: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '3.2rem'
   },
   categoryContainer: {
-    justifySelf: 'stretch'
+    // justifySelf: 'stretch',
+    margin: '2rem'
   },
-  goalsContainer: {},
   calendar: {
-    alignSelf: 'start'
+    // alignSelf: 'start'
   },
   dayPicker: {
-    fontSize: '1.7rem'
+    fontSize: '1.5vw'
   }
 }));
 
@@ -101,24 +119,35 @@ export default function AuthenticatedApp() {
       {state.isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div className={classes.mainContainer}>
-          <div className={classes.leftColumn}>
-            <div className={classes.categoryContainer}>
-              <CategoriesList
-                categories={state.categories}
-                dispatch={dispatch}
-              />
+        <div className={classes.app}>
+          <NavBar />
+          <div className={classes.mainContainer}>
+            <div className={classes.leftColumn}>
+              <div className={classes.categoryContainer}>
+                <CategoriesList
+                  categories={state.categories}
+                  dispatch={dispatch}
+                />
+              </div>
+              <div className={classes.calendar}>
+                <DayPicker
+                  className={classes.dayPicker}
+                  onDayClick={handleDayClick}
+                  selectedDays={state.selectedDay}
+                />
+              </div>
             </div>
-            <div className={classes.calendar}>
-              <DayPicker
-                className={classes.dayPicker}
-                onDayClick={handleDayClick}
-                selectedDays={state.selectedDay}
-              />
-            </div>
-          </div>
-          <div className={classes.rightColumn}>
-            <div className={classes.goalsContainer}>
+            <div className={classes.rightColumn}>
+              <div className={classes.topRight}>
+                <NewGoalField
+                  currentCategory={state.currentCategory}
+                  dispatch={dispatch}
+                />
+                <CompletionRate
+                  goals={state.goals}
+                  currentCategory={state.currentCategory}
+                />
+              </div>
               <GoalsList
                 goals={state.goals}
                 currentCategory={state.currentCategory}

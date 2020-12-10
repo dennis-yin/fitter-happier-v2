@@ -33,12 +33,12 @@ export function createGoal(description: String, category_id: number) {
   });
 }
 
-export function toggleComplete(id: number, isComplete: boolean) {
-  return axios.patch(`${goalsUrl}/${id}`, {
-    goal: { complete: !isComplete }
+export function toggleComplete(goal: Goal) {
+  return axios.patch(`${goalsUrl}/${goal.id}`, {
+    goal: { complete: !goal.complete }
   });
 }
 
-export function deleteGoal(id: number) {
-  return axios.delete(`${goalsUrl}/${id}`);
+export function deleteGoal(goal: Goal) {
+  return axios.delete(`${goalsUrl}/${goal.id}`);
 }
