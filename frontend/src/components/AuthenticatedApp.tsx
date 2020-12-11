@@ -39,7 +39,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    padding: '2rem 1.5rem 0 0'
+    padding: '2rem 1.5rem 0 0',
+    width: '22rem'
   },
   topRight: {
     display: 'flex',

@@ -1,0 +1,39 @@
+.goalItem {
+  width: 20em;
+  padding: 15px;
+  border: 1px solid #3f7cc4;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #4a90e2;
+  color: white;
+  margin-bottom: 13px
+}
+
+.goalItem.complete .toggleButton {
+  opacity: 100%;
+}
+
+.toggleButton {
+  transform: scale(1.5);
+  color: lightgreen;
+  position: relative;
+  right: 0.8rem;
+  opacity: 20%;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: 100%;
+  }
+}
+
+.deleteButton {
+  transform: scale(1.5);
+  color: #e34d42;
+  opacity: 20%;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 100%;
+  }
+}
