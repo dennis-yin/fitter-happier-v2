@@ -1,0 +1,16 @@
+.newGoalField {
+  height: 31px;
+  width: 160%;
+  font-size: 1rem;
+}
+
+.charsLeft {
+  position: relative;
+  top: 0.35rem;
+  left: 0.5rem;
+  font-weight: 600;
+
+  &.overLimit {
+    color: red;
+  }
+}

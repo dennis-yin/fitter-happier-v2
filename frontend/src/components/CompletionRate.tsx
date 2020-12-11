@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import './CompletionRate.scss';
 import Goal from './Goal';
 import Category from './Category';
-
-const useStyles = makeStyles(() => ({
-  completionRate: {
-    position: 'relative',
-    right: '1rem',
-    top: '0.6rem',
-  }
-}));
 
 interface Props {
   goals: Goal[];
@@ -17,8 +9,6 @@ interface Props {
 }
 
 export default function CompletionRate({ goals, currentCategory }: Props) {
-  const classes = useStyles();
-
   const [completionRate, setCompletionRate] = useState<number>(0);
 
   function calculateCompletionRate() {
@@ -33,5 +23,5 @@ export default function CompletionRate({ goals, currentCategory }: Props) {
     setCompletionRate(calculateCompletionRate());
   }, [goals, currentCategory]);
 
-  return <div className={classes.completionRate}>{completionRate}%</div>;
+  return <div className="completionRate">{completionRate}%</div>;
 }

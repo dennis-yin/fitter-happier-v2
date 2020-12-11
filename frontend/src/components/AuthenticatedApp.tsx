@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'space-evenly',
     padding: '15px',
-    height: '90%'
+    height: '32rem'
   },
   leftColumn: {
     display: 'flex',
@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
   topRight: {
     display: 'flex',
     justifyContent: 'space-between',
-    marginBottom: '3.2rem'
+    marginBottom: '2rem'
   },
   categoryContainer: {
     // justifySelf: 'stretch',

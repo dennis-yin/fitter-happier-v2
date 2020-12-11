@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import './NewGoalField.scss';
 import Category from './Category';
 import Goal, { createGoal } from './Goal';
 
-const useStyles = makeStyles(() => ({
-  newGoalField: {
-    height: '31px',
-    width: '160%',
-    fontSize: '1rem'
-  }
-}));
+const CHAR_LIMIT = 30;
 
 interface Props {
   currentCategory: Category;
@@ -17,30 +11,36 @@ interface Props {
 }
 
 export default function NewGoalField({ currentCategory, dispatch }: Props) {
-  const classes = useStyles();
-
   const [description, setDescription] = useState<string>('');
+  const [charsLeft, setCharsLeft] = useState<number>(CHAR_LIMIT);
+
+  function handleChange(input: string) {
+    setDescription(input);
+    setCharsLeft(CHAR_LIMIT - input.length);
+  }
 
   function handleCreate() {
-    createGoal(description, currentCategory.id)
-      .then((res) => {
-        debugger;
-        const {
-          id,
-          attributes: { user_id, description, complete, category_id }
-        } = res.data.data;
-        const newGoal = new Goal(
-          id,
-          user_id,
-          description,
-          complete,
-          category_id
-        );
-        dispatch({ type: 'CREATE_GOAL', data: { newGoal } });
-      })
-      .catch((err) => console.log(err));
-    setDescription('');
-    console.log('Created goal');
+    if (description.length <= CHAR_LIMIT) {
+      createGoal(description, currentCategory.id)
+        .then((res) => {
+          debugger;
+          const {
+            id,
+            attributes: { user_id, description, complete, category_id }
+          } = res.data.data;
+          const newGoal = new Goal(
+            id,
+            user_id,
+            description,
+            complete,
+            category_id
+          );
+          dispatch({ type: 'CREATE_GOAL', data: { newGoal } });
+        })
+        .catch((err) => console.log(err));
+      setDescription('');
+      console.log('Created goal');
+    }
   }
 
   return (
@@ -52,11 +52,14 @@ export default function NewGoalField({ currentCategory, dispatch }: Props) {
         }}
       >
         <input
-          className={classes.newGoalField}
+          className="newGoalField"
           type="text"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
         />
+        <div className={`charsLeft ${charsLeft < 0 ? 'overLimit' : ''}`}>
+          {charsLeft}
+        </div>
       </form>
     </>
   );
