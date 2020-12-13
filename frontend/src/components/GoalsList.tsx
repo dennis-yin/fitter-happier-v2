@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import './GoalsList.scss';
 import Goal from './Goal';
 import GoalItem from './GoalItem';
 
@@ -10,9 +11,13 @@ interface Props {
 export default function GoalsList({ goals, dispatch }: Props) {
   return (
     <>
-      {goals.map((goal) => (
-        <GoalItem goal={goal} dispatch={dispatch} />
-      ))}
+      {goals.length === 0 ? (
+        <div className="message emptyListMessage">
+          You haven't made any goals for this day... yet!
+        </div>
+      ) : (
+        goals.map((goal) => <GoalItem goal={goal} dispatch={dispatch} />)
+      )}
     </>
   );
 }
