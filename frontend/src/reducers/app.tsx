@@ -81,6 +81,17 @@ export default function reducer(state: State, action: any) {
         goals: state.goals.filter((goal) => goal.id !== action.data.id)
       };
 
+    case 'FILTER_GOALS':
+      return {
+        ...state,
+        filteredGoals:
+          state.goals.length > 0
+            ? state.goals.filter(
+                (goal) => goal.category_id === Number(state.currentCategory.id)
+              )
+            : []
+      };
+
     case 'SELECT_DAY':
       return {
         ...state,

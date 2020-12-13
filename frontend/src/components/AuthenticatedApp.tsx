@@ -64,6 +64,7 @@ export interface State {
   isLoading: boolean;
   categories: Category[];
   goals: Goal[];
+  filteredGoals: Goal[];
   currentCategory?: Category;
   selectedDay: Date;
 }
@@ -72,6 +73,7 @@ const initialState: State = {
   isLoading: true,
   categories: [],
   goals: [],
+  filteredGoals: [],
   selectedDay: new Date()
 };
 
@@ -116,6 +118,10 @@ export default function AuthenticatedApp() {
     );
   }, [state.selectedDay]);
 
+  useEffect(() => {
+    dispatch({ type: 'FILTER_GOALS' });
+  }, [state.currentCategory, state.goals]);
+
   return (
     <>
       {state.isLoading ? (
@@ -148,16 +154,14 @@ export default function AuthenticatedApp() {
                 />
                 <Streak
                   currentCategory={state.currentCategory}
-                  goals={state.goals}
+                  goals={state.filteredGoals}
                 />
                 <CompletionRate
-                  goals={state.goals}
-                  currentCategory={state.currentCategory}
+                  goals={state.filteredGoals}
                 />
               </div>
               <GoalsList
-                goals={state.goals}
-                currentCategory={state.currentCategory}
+                goals={state.filteredGoals}
                 dispatch={dispatch}
               />
             </div>

@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './CompletionRate.scss';
 import Goal from './Goal';
-import Category from './Category';
 
 interface Props {
   goals: Goal[];
-  currentCategory: Category;
 }
 
-export default function CompletionRate({ goals, currentCategory }: Props) {
+export default function CompletionRate({ goals }: Props) {
   const [completionRate, setCompletionRate] = useState<number>(0);
 
   function calculateCompletionRate() {
@@ -21,7 +19,7 @@ export default function CompletionRate({ goals, currentCategory }: Props) {
 
   useEffect(() => {
     setCompletionRate(calculateCompletionRate());
-  }, [goals, currentCategory]);
+  }, [goals]);
 
   return <div className="completionRate">{completionRate}%</div>;
 }
