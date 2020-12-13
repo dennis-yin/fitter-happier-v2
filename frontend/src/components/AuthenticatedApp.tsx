@@ -5,8 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import reducer from '../reducers/app';
 import NavBar from './NavBar';
 import CategoriesList from './CategoriesList';
-import Goal, { fetchGoals } from './Goal';
-import Category, { fetchCategories } from './Category';
+import Goal from './Goal';
+import Category from './Category';
 import GoalsList from './GoalsList';
 import DayPicker from 'react-day-picker';
 import ProgressBar from './ProgressBar';
@@ -54,7 +54,7 @@ export default function AuthenticatedApp() {
   }
 
   useEffect(() => {
-    Promise.all([fetchCategories(), fetchGoals(selectedDay)]).then(
+    Promise.all([Category.fetch(), Goal.fetch(selectedDay)]).then(
       (res) => {
         console.log('FETCHING DATA FOR THE FIRST TIME ...');
         dispatch({
@@ -69,7 +69,7 @@ export default function AuthenticatedApp() {
   }, []);
 
   useEffect(() => {
-    Promise.all([fetchCategories(), fetchGoals(selectedDay)]).then(
+    Promise.all([Category.fetch(), Goal.fetch(selectedDay)]).then(
       (res) => {
         console.log('FETCHING DATA ...');
         dispatch({

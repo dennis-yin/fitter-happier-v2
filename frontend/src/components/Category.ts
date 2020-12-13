@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-const url = 'http://localhost:3001/api/v1/categories';
-
 export default class Category {
   id: number;
   title: string;
@@ -10,16 +8,18 @@ export default class Category {
     this.id = id;
     this.title = title;
   }
-}
 
-export function fetchCategories() {
-  return axios.get(url);
-}
+  static url = 'http://localhost:3001/api/v1/categories';
 
-export function createCategory(title: string) {
-  return axios.post(url, { category: { title } });
-}
+  static fetch() {
+    return axios.get(this.url);
+  }
 
-export function fetchStreak(categoryId: number) {
-  return axios.get(`${url}/${categoryId}/streaks`)
+  static create(title: string) {
+    return axios.post(this.url, { category: { title } });
+  }
+
+  static fetchStreak(categoryId: number) {
+    return axios.get(`${this.url}/${categoryId}/streaks`);
+  }
 }

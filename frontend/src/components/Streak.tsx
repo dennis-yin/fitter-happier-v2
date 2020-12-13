@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Streak.scss';
-import Category, { fetchStreak } from './Category';
+import Category from './Category';
 import Goal from './Goal'
 
 interface Props {
@@ -12,7 +12,7 @@ export default function Streak({ currentCategory, goals }: Props) {
   const [streak, setStreak] = useState<number>(0);
 
   useEffect(() => {
-    fetchStreak(currentCategory.id).then((res) => {
+    Category.fetchStreak(currentCategory.id).then((res) => {
       setStreak(res.data);
     });
   }, [currentCategory, goals]);

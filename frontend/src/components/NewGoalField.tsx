@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './NewGoalField.scss';
 import Category from './Category';
-import Goal, { createGoal } from './Goal';
+import Goal from './Goal';
 
 const CHAR_LIMIT = 30;
 
@@ -22,7 +22,7 @@ export default function NewGoalField({ currentCategory, date, dispatch }: Props)
 
   function handleCreate() {
     if (description.length <= CHAR_LIMIT) {
-      createGoal(description, currentCategory.id, date)
+      Goal.create(description, currentCategory.id, date)
         .then((res) => {
           const {
             id,

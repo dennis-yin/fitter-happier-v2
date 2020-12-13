@@ -1,7 +1,7 @@
 import React from 'react';
 import './GoalItem.scss'
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from 'react-icons/io';
-import Goal, { toggleComplete, deleteGoal } from './Goal';
+import Goal from './Goal';
 
 interface Props {
   goal: Goal;
@@ -10,7 +10,7 @@ interface Props {
 
 export default function GoalItem({ goal, dispatch }: Props) {
   function handleToggle() {
-    toggleComplete(goal)
+    Goal.toggleComplete(goal)
       .then((res) => {
         const {
           id,
@@ -35,7 +35,7 @@ export default function GoalItem({ goal, dispatch }: Props) {
   }
 
   function handleDelete() {
-    deleteGoal(goal)
+    Goal.delete(goal)
       .then((res) => {
         dispatch({ type: 'DELETE_GOAL', data: { id: goal.id } });
         console.log('Goal deleted');

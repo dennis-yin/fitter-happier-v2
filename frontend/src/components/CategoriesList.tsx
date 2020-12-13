@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import Category, { fetchCategories, createCategory } from './Category';
+import Category from './Category';
 
 interface Props {
   categories: Category[];
@@ -35,8 +35,8 @@ function CategoriesList({ categories, dispatch }: Props) {
 
   function handleCreate() {
     setIsLoading(true);
-    createCategory(newCategoryTitle).then((_) => {
-      fetchCategories().then((res) => {
+    Category.create(newCategoryTitle).then((_) => {
+      Category.fetch().then((res) => {
         dispatch({ type: 'SET_CATEGORIES', data: res.data.data });
         setIsLoading(false);
       });
