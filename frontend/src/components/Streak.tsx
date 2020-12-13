@@ -13,7 +13,6 @@ export default function Streak({ currentCategory, goals }: Props) {
 
   useEffect(() => {
     fetchStreak(currentCategory.id).then((res) => {
-      debugger;
       setStreak(res.data);
     });
   }, [currentCategory, goals]);

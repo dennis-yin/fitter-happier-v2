@@ -9,7 +9,7 @@ import Goal, { fetchGoals } from './Goal';
 import Category, { fetchCategories } from './Category';
 import GoalsList from './GoalsList';
 import DayPicker from 'react-day-picker';
-import CompletionRate from './CompletionRate';
+import ProgressBar from './ProgressBar';
 import NewGoalField from './NewGoalField';
 import Streak from './Streak';
 import 'react-day-picker/lib/style.css';
@@ -122,7 +122,7 @@ export default function AuthenticatedApp() {
                   currentCategory={currentCategory}
                   goals={filteredGoals}
                 />
-                <CompletionRate goals={filteredGoals} />
+                <ProgressBar goals={filteredGoals} />
               </div>
               <GoalsList goals={filteredGoals} dispatch={dispatch} />
             </div>
