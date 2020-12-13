@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './NewGoalField.scss';
+import '../scss/NewGoalField.scss';
 import Category from './Category';
 import Goal from './Goal';
 

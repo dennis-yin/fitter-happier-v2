@@ -1,5 +1,5 @@
 import React from 'react';
-import './GoalsList.scss';
+import '../scss/GoalsList.scss';
 import Goal from './Goal';
 import GoalItem from './GoalItem';
 

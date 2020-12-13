@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer } from 'react';
-import './AuthenticatedApp.scss';
+import '../scss/AuthenticatedApp.scss';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import reducer from '../reducers/app';
+import reducer from '../reducers/app-reducer';
 import NavBar from './NavBar';
 import CategoriesList from './CategoriesList';
 import Goal from './Goal';

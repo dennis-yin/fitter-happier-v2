@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Streak.scss';
+import '../scss/Streak.scss';
 import Category from './Category';
 import Goal from './Goal'
 

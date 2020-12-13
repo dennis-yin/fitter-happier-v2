@@ -1,5 +1,5 @@
 import React from 'react';
-import './GoalItem.scss'
+import '../scss/GoalItem.scss'
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from 'react-icons/io';
 import Goal from './Goal';
 
