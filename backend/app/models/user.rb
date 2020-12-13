@@ -25,7 +25,7 @@ class User < ApplicationRecord
   has_many :goals
 
   def completed_all_goals_for_date?(date)
-    goals = Goal.where('category_id = ? AND created_at::date = ?', @category_id, date)
+    goals = Goal.where('category_id = ? AND date = ?', @category_id, date)
     return false if goals.empty?
 
     goals.each do |goal|

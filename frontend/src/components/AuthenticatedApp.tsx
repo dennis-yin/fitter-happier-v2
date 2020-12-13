@@ -10,6 +10,7 @@ import GoalsList from './GoalsList';
 import DayPicker from 'react-day-picker';
 import CompletionRate from './CompletionRate';
 import NewGoalField from './NewGoalField';
+import Streak from './Streak';
 import 'react-day-picker/lib/style.css';
 
 const useStyles = makeStyles(() => ({
@@ -24,7 +25,7 @@ const useStyles = makeStyles(() => ({
   mainContainer: {
     gridColumn: '2 / 3',
     gridRow: '2 / 3',
-    boxShadow: '0px 0px 20px 0px #949494',
+    boxShadow: '0px 0px 10px 0px #949494',
     borderRadius: '15px',
     display: 'flex',
     justifyContent: 'space-evenly',
@@ -144,6 +145,10 @@ export default function AuthenticatedApp() {
                   currentCategory={state.currentCategory}
                   date={state.selectedDay}
                   dispatch={dispatch}
+                />
+                <Streak
+                  currentCategory={state.currentCategory}
+                  goals={state.goals}
                 />
                 <CompletionRate
                   goals={state.goals}

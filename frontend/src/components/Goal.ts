@@ -1,5 +1,5 @@
 import axios from 'axios';
-const goalsUrl = 'http://localhost:3001/api/v1/goals';
+const url = 'http://localhost:3001/api/v1/goals';
 
 export default class Goal {
   id: number;
@@ -24,21 +24,21 @@ export default class Goal {
 }
 
 export function fetchGoals(date?: string) {
-  return date ? axios.get(`${goalsUrl}?date=${date}`) : axios.get(goalsUrl);
+  return date ? axios.get(`${url}?date=${date}`) : axios.get(url);
 }
 
-export function createGoal(description: String, category_id: number, date: string) {
-  return axios.post(`${goalsUrl}?date=${date}`, {
+export function createGoal(description: string, category_id: number, date: string) {
+  return axios.post(`${url}?date=${date}`, {
     goal: { description, complete: false, category_id }
   });
 }
 
 export function toggleComplete(goal: Goal) {
-  return axios.patch(`${goalsUrl}/${goal.id}`, {
+  return axios.patch(`${url}/${goal.id}`, {
     goal: { complete: !goal.complete }
   });
 }
 
 export function deleteGoal(goal: Goal) {
-  return axios.delete(`${goalsUrl}/${goal.id}`);
+  return axios.delete(`${url}/${goal.id}`);
 }
