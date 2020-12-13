@@ -16,7 +16,7 @@ import 'react-day-picker/lib/style.css';
 
 const useStyles = makeStyles(() => ({
   dayPicker: {
-    fontSize: '1.5vw'
+    fontSize: '1.4rem'
   }
 }));
 

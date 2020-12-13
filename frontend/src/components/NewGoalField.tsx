@@ -3,7 +3,7 @@ import '../scss/NewGoalField.scss';
 import Category from './Category';
 import Goal from './Goal';
 
-const CHAR_LIMIT = 30;
+const CHAR_LIMIT = 50;
 
 interface Props {
   currentCategory: Category;
