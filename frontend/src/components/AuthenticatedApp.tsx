@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer } from 'react';
+import './AuthenticatedApp.scss';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import reducer from '../reducers/app';
@@ -14,47 +15,6 @@ import Streak from './Streak';
 import 'react-day-picker/lib/style.css';
 
 const useStyles = makeStyles(() => ({
-  app: {
-    height: '90vh',
-    display: 'grid',
-    gridTemplateColumns: '1.5fr 7fr 1.5fr',
-    gridTemplateRows: '2fr 7fr 1fr',
-    justifyItems: 'center',
-    alignItems: 'center'
-  },
-  mainContainer: {
-    gridColumn: '2 / 3',
-    gridRow: '2 / 3',
-    boxShadow: '0px 0px 10px 0px #949494',
-    borderRadius: '15px',
-    display: 'flex',
-    justifyContent: 'space-evenly',
-    padding: '15px',
-    height: '32rem'
-  },
-  leftColumn: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  rightColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    padding: '2rem 1.5rem 0 0',
-    width: '22rem'
-  },
-  topRight: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '2rem'
-  },
-  categoryContainer: {
-    // justifySelf: 'stretch',
-    margin: '2rem'
-  },
-  calendar: {
-    // alignSelf: 'start'
-  },
   dayPicker: {
     fontSize: '1.5vw'
   }
@@ -127,17 +87,17 @@ export default function AuthenticatedApp() {
       {state.isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div className={classes.app}>
+        <div className="app">
           <NavBar />
-          <div className={classes.mainContainer}>
-            <div className={classes.leftColumn}>
-              <div className={classes.categoryContainer}>
+          <div className="mainContainer">
+            <div className="leftColumn">
+              <div className="categoryContainer">
                 <CategoriesList
                   categories={state.categories}
                   dispatch={dispatch}
                 />
               </div>
-              <div className={classes.calendar}>
+              <div className="calendar">
                 <DayPicker
                   className={classes.dayPicker}
                   onDayClick={handleDayClick}
@@ -145,8 +105,8 @@ export default function AuthenticatedApp() {
                 />
               </div>
             </div>
-            <div className={classes.rightColumn}>
-              <div className={classes.topRight}>
+            <div className="rightColumn">
+              <div className="topRight">
                 <NewGoalField
                   currentCategory={state.currentCategory}
                   date={state.selectedDay}

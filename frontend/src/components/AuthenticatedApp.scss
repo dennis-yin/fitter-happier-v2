@@ -1,0 +1,43 @@
+.app {
+  height: 90vh;
+  display: grid;
+  grid-template-columns: 1.5fr 7fr 1.5fr;
+  grid-template-rows: 2fr 7fr 1fr;
+  justify-items: center;
+  align-items: center
+}
+
+.mainContainer {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  box-shadow: 0px 0px 10px 0px #949494;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-evenly;
+  padding: 15px;
+  height: 32rem
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2rem 1.5rem 0 0;
+  width: 22rem
+}
+
+.topRight {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem
+}
+
+.categoryContainer {
+  // justifySelf: stretch;
+  margin: 2rem
+}

@@ -11,9 +11,7 @@ export default function CompletionRate({ goals }: Props) {
 
   function calculateCompletionRate() {
     if (goals.length === 0) return 0; // So we don't divide by 0
-
     const completed = goals.filter((goal) => goal.complete).length;
-
     return Math.round((completed / goals.length) * 100);
   }
 
