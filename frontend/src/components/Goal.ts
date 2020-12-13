@@ -27,8 +27,8 @@ export function fetchGoals(date?: string) {
   return date ? axios.get(`${goalsUrl}?date=${date}`) : axios.get(goalsUrl);
 }
 
-export function createGoal(description: String, category_id: number) {
-  return axios.post(goalsUrl, {
+export function createGoal(description: String, category_id: number, date: string) {
+  return axios.post(`${goalsUrl}?date=${date}`, {
     goal: { description, complete: false, category_id }
   });
 }

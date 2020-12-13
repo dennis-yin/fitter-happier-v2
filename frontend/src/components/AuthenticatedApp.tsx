@@ -142,6 +142,7 @@ export default function AuthenticatedApp() {
               <div className={classes.topRight}>
                 <NewGoalField
                   currentCategory={state.currentCategory}
+                  date={state.selectedDay}
                   dispatch={dispatch}
                 />
                 <CompletionRate

@@ -7,10 +7,11 @@ const CHAR_LIMIT = 30;
 
 interface Props {
   currentCategory: Category;
+  date: string;
   dispatch: any;
 }
 
-export default function NewGoalField({ currentCategory, dispatch }: Props) {
+export default function NewGoalField({ currentCategory, date, dispatch }: Props) {
   const [description, setDescription] = useState<string>('');
   const [charsLeft, setCharsLeft] = useState<number>(CHAR_LIMIT);
 
@@ -21,9 +22,8 @@ export default function NewGoalField({ currentCategory, dispatch }: Props) {
 
   function handleCreate() {
     if (description.length <= CHAR_LIMIT) {
-      createGoal(description, currentCategory.id)
+      createGoal(description, currentCategory.id, date)
         .then((res) => {
-          debugger;
           const {
             id,
             attributes: { user_id, description, complete, category_id }
@@ -39,6 +39,7 @@ export default function NewGoalField({ currentCategory, dispatch }: Props) {
         })
         .catch((err) => console.log(err));
       setDescription('');
+      setCharsLeft(CHAR_LIMIT);
       console.log('Created goal');
     }
   }
