@@ -29,7 +29,7 @@ class Api::V1::GoalsController < ApplicationController
   end
 
   def update
-    if @goal.update(goal_params)
+    if @goal.date <= Date.today && @goal.update(goal_params)
       respond_with_goal
     else
       puts @goal.errors
