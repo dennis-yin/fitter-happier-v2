@@ -44,6 +44,8 @@ class User < ApplicationRecord
       if completed_all_goals_for_date?(date)
         streak += 1
         date = date.prev_day
+      elsif date == Date.today
+        date = date.prev_day
       else
         break
       end
