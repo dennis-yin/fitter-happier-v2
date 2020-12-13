@@ -39,7 +39,11 @@ const initialState: State = {
 
 export default function AuthenticatedApp() {
   const classes = useStyles();
-  const [state, dispatch] = useReducer(reducer, initialState);
+  
+  const [
+    { isLoading, categories, goals, filteredGoals, currentCategory, selectedDay },
+    dispatch
+  ] = useReducer(reducer, initialState);
 
   ['access-token', 'client', 'uid'].forEach(
     (key) => (axios.defaults.headers.common[key] = localStorage.getItem(key))
@@ -50,7 +54,7 @@ export default function AuthenticatedApp() {
   }
 
   useEffect(() => {
-    Promise.all([fetchCategories(), fetchGoals(state.selectedDay)]).then(
+    Promise.all([fetchCategories(), fetchGoals(selectedDay)]).then(
       (res) => {
         console.log('FETCHING DATA FOR THE FIRST TIME ...');
         dispatch({
@@ -65,7 +69,7 @@ export default function AuthenticatedApp() {
   }, []);
 
   useEffect(() => {
-    Promise.all([fetchCategories(), fetchGoals(state.selectedDay)]).then(
+    Promise.all([fetchCategories(), fetchGoals(selectedDay)]).then(
       (res) => {
         console.log('FETCHING DATA ...');
         dispatch({
@@ -76,15 +80,17 @@ export default function AuthenticatedApp() {
         dispatch({ type: 'SET_GOALS', data: res[1].data.data });
       }
     );
-  }, [state.selectedDay]);
+  }, [selectedDay]);
 
   useEffect(() => {
-    dispatch({ type: 'FILTER_GOALS' });
-  }, [state.currentCategory, state.goals]);
+    if (currentCategory) {
+      dispatch({ type: 'FILTER_GOALS' });
+    }
+  }, [currentCategory, goals]);
 
   return (
     <>
-      {state.isLoading ? (
+      {isLoading ? (
         <div>Loading...</div>
       ) : (
         <div className="app">
@@ -93,7 +99,7 @@ export default function AuthenticatedApp() {
             <div className="leftColumn">
               <div className="categoryContainer">
                 <CategoriesList
-                  categories={state.categories}
+                  categories={categories}
                   dispatch={dispatch}
                 />
               </div>
@@ -101,29 +107,24 @@ export default function AuthenticatedApp() {
                 <DayPicker
                   className={classes.dayPicker}
                   onDayClick={handleDayClick}
-                  selectedDays={state.selectedDay}
+                  selectedDays={selectedDay}
                 />
               </div>
             </div>
             <div className="rightColumn">
               <div className="topRight">
                 <NewGoalField
-                  currentCategory={state.currentCategory}
-                  date={state.selectedDay}
+                  currentCategory={currentCategory}
+                  date={selectedDay}
                   dispatch={dispatch}
                 />
                 <Streak
-                  currentCategory={state.currentCategory}
-                  goals={state.filteredGoals}
+                  currentCategory={currentCategory}
+                  goals={filteredGoals}
                 />
-                <CompletionRate
-                  goals={state.filteredGoals}
-                />
+                <CompletionRate goals={filteredGoals} />
               </div>
-              <GoalsList
-                goals={state.filteredGoals}
-                dispatch={dispatch}
-              />
+              <GoalsList goals={filteredGoals} dispatch={dispatch} />
             </div>
           </div>
         </div>
