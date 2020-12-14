@@ -2,7 +2,6 @@ class Api::V1::CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :update, :destroy]
   before_action :authenticate_user!
 
-  # GET /categories
   def index
     category_ids = []
     goals = Goal.where(user_id: current_user.id)
@@ -18,12 +17,10 @@ class Api::V1::CategoriesController < ApplicationController
     render json: CategorySerializer.new(categories).serializable_hash.to_json
   end
 
-  # GET /categories/1
   def show
     render json: @category
   end
 
-  # POST /categories
   def create
     if Category.exists?(title: params[:category][:title])
       head :ok
@@ -39,7 +36,6 @@ class Api::V1::CategoriesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /categories/1
   def update
     if @category.update(category_params)
       render json: @category
@@ -48,7 +44,6 @@ class Api::V1::CategoriesController < ApplicationController
     end
   end
 
-  # DELETE /categories/1
   def destroy
     @category.destroy
   end

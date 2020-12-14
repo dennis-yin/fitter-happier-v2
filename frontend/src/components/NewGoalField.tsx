@@ -3,7 +3,7 @@ import '../scss/NewGoalField.scss';
 import Category from './Category';
 import Goal from './Goal';
 
-const CHAR_LIMIT = 50;
+const CHAR_LIMIT = 45;
 
 interface Props {
   currentCategory: Category;
@@ -55,6 +55,7 @@ export default function NewGoalField({ currentCategory, date, dispatch }: Props)
         <input
           className="newGoalField"
           type="text"
+          placeholder="Enter a new goal here"
           value={description}
           onChange={(e) => handleChange(e.target.value)}
         />

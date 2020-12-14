@@ -12,9 +12,9 @@ export default function GoalsList({ goals, dispatch }: Props) {
   return (
     <>
       {goals.length === 0 ? (
-        <div className="message emptyListMessage">
+        <p className="message emptyListMessage">
           You haven't made any goals for this day... yet!
-        </div>
+        </p>
       ) : (
         goals.map((goal) => <GoalItem goal={goal} dispatch={dispatch} />)
       )}
