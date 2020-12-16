@@ -9,15 +9,15 @@ user = User.create!({
 categories = Category.create!([
   {
     title: "Career",
-    image_url: "https://banner2.cleanpng.com/20180218/cxq/kisspng-briefcase-stock-xchng-leather-clip-art-open-suitcase-clipart-5a8a242cc70b44.2234702215190026688153.jpg",
+    user_id: user.id
   },
   {
     title: "Education",
-    image_url: "https://banner2.cleanpng.com/20180203/tpe/kisspng-book-clip-art-textbooks-cliparts-5a762dd31d54f7.3012080915176944191202.jpg",
+    user_id: user.id
   },
   {
     title: "Fitness",
-    image_url: "https://banner2.cleanpng.com/20180317/ihe/kisspng-dumbbell-barbell-weight-training-clip-art-dumbbell-cliparts-5aad8396251186.0065234615213208541518.jpg",
+    user_id: user.id
   },
 ])
 
