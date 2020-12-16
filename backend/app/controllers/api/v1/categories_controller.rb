@@ -3,17 +3,7 @@ class Api::V1::CategoriesController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    category_ids = []
-    goals = Goal.where(user_id: current_user.id)
-
-    goals.each do |goal|
-      unless category_ids.include? goal.category_id
-        category_ids.push(goal.category_id)
-      end
-    end
-
-    categories = Category.where(id: category_ids).order(:title)
-
+    categories = Category.where(user_id: current_user.id).order(:title)
     render json: CategorySerializer.new(categories).serializable_hash.to_json
   end
 
@@ -22,17 +12,16 @@ class Api::V1::CategoriesController < ApplicationController
   end
 
   def create
-    if Category.exists?(title: params[:category][:title])
-      head :ok
-    else
-      @category = Category.new(category_params)
+    @category = Category.new(
+      title: params[:category][:title],
+      user_id: current_user.id
+    )
 
-      if @category.save
-        render json: @category
-      else
-        puts @category.errors
-        head :unprocessable_entity
-      end
+    if @category.save
+      render json: @category
+    else
+      puts @category.errors
+      head :unprocessable_entity
     end
   end
 

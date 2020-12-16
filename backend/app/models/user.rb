@@ -23,6 +23,7 @@ class User < ApplicationRecord
   extend Devise::Models
 
   has_many :goals
+  has_many :categories
 
   def completed_all_goals_for_date?(date)
     goals = Goal.where('category_id = ? AND date = ?', @category_id, date)
