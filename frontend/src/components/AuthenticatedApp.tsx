@@ -12,12 +12,13 @@ import DayPicker from 'react-day-picker';
 import ProgressBar from './ProgressBar';
 import NewGoalField from './NewGoalField';
 import Streak from './Streak';
+import PageIndex from './PageIndex';
 import 'react-day-picker/lib/style.css';
 
 const useStyles = makeStyles(() => ({
   dayPicker: {
-    fontSize: '1.4rem'
-  }
+    fontSize: '1.4rem',
+  },
 }));
 
 export interface State {
@@ -27,6 +28,7 @@ export interface State {
   filteredGoals: Goal[];
   currentCategory?: Category;
   selectedDay: Date;
+  page: number;
 }
 
 const initialState: State = {
@@ -34,15 +36,24 @@ const initialState: State = {
   categories: [],
   goals: [],
   filteredGoals: [],
-  selectedDay: new Date()
+  selectedDay: new Date(),
+  page: 1,
 };
 
 export default function AuthenticatedApp() {
   const classes = useStyles();
-  
+
   const [
-    { isLoading, categories, goals, filteredGoals, currentCategory, selectedDay },
-    dispatch
+    {
+      isLoading,
+      categories,
+      goals,
+      filteredGoals,
+      currentCategory,
+      selectedDay,
+      page,
+    },
+    dispatch,
   ] = useReducer(reducer, initialState);
 
   ['access-token', 'client', 'uid'].forEach(
@@ -54,32 +65,28 @@ export default function AuthenticatedApp() {
   }
 
   useEffect(() => {
-    Promise.all([Category.fetch(), Goal.fetch(selectedDay)]).then(
-      (res) => {
-        console.log('FETCHING DATA FOR THE FIRST TIME ...');
-        dispatch({
-          type: 'SET_CATEGORIES',
-          data: res[0].data.data,
-          initialRender: true
-        });
-        dispatch({ type: 'SET_GOALS', data: res[1].data.data });
-        dispatch({ type: 'TOGGLE_LOADING' });
-      }
-    );
+    Promise.all([Category.fetch(), Goal.fetch(selectedDay)]).then((res) => {
+      console.log('FETCHING DATA FOR THE FIRST TIME ...');
+      dispatch({
+        type: 'SET_CATEGORIES',
+        data: res[0].data.data,
+        initialRender: true,
+      });
+      dispatch({ type: 'SET_GOALS', data: res[1].data.data });
+      dispatch({ type: 'TOGGLE_LOADING' });
+    });
   }, []);
 
   useEffect(() => {
-    Promise.all([Category.fetch(), Goal.fetch(selectedDay)]).then(
-      (res) => {
-        console.log('FETCHING DATA ...');
-        dispatch({
-          type: 'SET_CATEGORIES',
-          data: res[0].data.data,
-          initialRender: false
-        });
-        dispatch({ type: 'SET_GOALS', data: res[1].data.data });
-      }
-    );
+    Promise.all([Category.fetch(), Goal.fetch(selectedDay)]).then((res) => {
+      console.log('FETCHING DATA ...');
+      dispatch({
+        type: 'SET_CATEGORIES',
+        data: res[0].data.data,
+        initialRender: false,
+      });
+      dispatch({ type: 'SET_GOALS', data: res[1].data.data });
+    });
   }, [selectedDay]);
 
   useEffect(() => {
@@ -98,10 +105,7 @@ export default function AuthenticatedApp() {
           <div className="mainContainer">
             <div className="leftColumn">
               <div className="categoryContainer">
-                <CategoriesList
-                  categories={categories}
-                  dispatch={dispatch}
-                />
+                <CategoriesList categories={categories} dispatch={dispatch} />
               </div>
               <div className="calendar">
                 <DayPicker
@@ -124,7 +128,12 @@ export default function AuthenticatedApp() {
                 />
                 <ProgressBar goals={filteredGoals} />
               </div>
-              <GoalsList goals={filteredGoals} dispatch={dispatch} />
+              <GoalsList
+                goals={filteredGoals}
+                page={page}
+                dispatch={dispatch}
+              />
+              <PageIndex dispatch={dispatch} />
             </div>
           </div>
         </div>

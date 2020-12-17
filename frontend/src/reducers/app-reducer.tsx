@@ -7,7 +7,7 @@ export default function reducer(state: State, action: any) {
     case 'TOGGLE_LOADING':
       return {
         ...state,
-        isLoading: !state.isLoading
+        isLoading: !state.isLoading,
       };
 
     case 'SET_CATEGORIES':
@@ -19,12 +19,12 @@ export default function reducer(state: State, action: any) {
         return {
           ...state,
           categories,
-          currentCategory: categories[0]
+          currentCategory: categories[0],
         };
       } else {
         return {
           ...state,
-          categories
+          categories,
         };
       }
 
@@ -40,7 +40,7 @@ export default function reducer(state: State, action: any) {
       )[0];
       return {
         ...state,
-        currentCategory: selectedCategory
+        currentCategory: selectedCategory,
       };
 
     case 'SET_GOALS':
@@ -55,13 +55,13 @@ export default function reducer(state: State, action: any) {
               goal.attributes.complete,
               goal.attributes.category_id
             )
-        )
+        ),
       };
 
     case 'CREATE_GOAL':
       return {
         ...state,
-        goals: [...state.goals, action.data.newGoal]
+        goals: [...state.goals, action.data.newGoal],
       };
 
     case 'UPDATE_GOAL':
@@ -71,14 +71,14 @@ export default function reducer(state: State, action: any) {
           ...state.goals.filter(
             (goal) => goal.id !== action.data.updatedGoal.id
           ),
-          action.data.updatedGoal
-        ]
+          action.data.updatedGoal,
+        ],
       };
 
     case 'DELETE_GOAL':
       return {
         ...state,
-        goals: state.goals.filter((goal) => goal.id !== action.data.id)
+        goals: state.goals.filter((goal) => goal.id !== action.data.id),
       };
 
     case 'FILTER_GOALS':
@@ -89,13 +89,31 @@ export default function reducer(state: State, action: any) {
             ? state.goals.filter(
                 (goal) => goal.category_id === Number(state.currentCategory.id)
               )
-            : []
+            : [],
       };
 
     case 'SELECT_DAY':
       return {
         ...state,
-        selectedDay: action.data
+        selectedDay: action.data,
+      };
+
+    case 'NEXT_PAGE':
+      return {
+        ...state,
+        page: state.page + 1,
+      };
+
+    case 'PREVIOUS_PAGE':
+      return {
+        ...state,
+        page: state.page - 1,
+      };
+
+    case 'RESET_PAGE':
+      return {
+        ...state,
+        page: 1,
       };
 
     default:

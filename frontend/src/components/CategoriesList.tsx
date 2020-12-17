@@ -38,6 +38,7 @@ function CategoriesList({ categories, dispatch }: Props) {
     Category.create(newCategoryTitle).then((_) => {
       Category.fetch().then((res) => {
         dispatch({ type: 'SET_CATEGORIES', data: res.data.data });
+        dispatch({ type: 'RESET_PAGE '})
         setIsLoading(false);
       });
     });
